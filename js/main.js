@@ -1,3 +1,5 @@
+const botX = 300;
+const botY = 300;
 const botWidth = 100;
 const botHeight = 50;
 const botSpeed = 2;
@@ -29,8 +31,8 @@ function draw() {
       bot.shot = false;
     }
   }
-
-  //bot.forward();
+  bot.rotate(0.2);
+  bot.forward();
   bot.showAim();
   bot.show();
 }

@@ -1,6 +1,6 @@
 class Bot {
   constructor() {
-    this.position = createVector(100, 100);
+    this.position = createVector(botX, botY);
     this.width = botWidth;
     this.height = botHeight;
     this.speed = botSpeed;
