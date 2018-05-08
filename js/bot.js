@@ -28,10 +28,10 @@ class Bot {
   }
 
   shoot() {
-    //if (!this.shot) {
-    this.shot = true;
-    return new Bullet(this.position.x, this.position.y, this.angle);
-    //}
+    if (!this.shot) {
+      this.shot = true;
+      return new Bullet(this.position.x, this.position.y, this.angle);
+    }
   }
 
   rotate(angle) {

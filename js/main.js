@@ -26,6 +26,7 @@ function draw() {
     bullets[i].show();
     if (bullets[i].offscreen()) {
       bullets.splice(i, 1);
+      bot.shot = false;
     }
   }
 

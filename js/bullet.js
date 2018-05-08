@@ -13,7 +13,6 @@ class Bullet {
     this.position.y += this.speed * sin(-this.angle);
     this.centerPosition.x += this.speed * cos(-this.angle);
     this.centerPosition.y += this.speed * sin(-this.angle);
-
   }
 
   offscreen() {
