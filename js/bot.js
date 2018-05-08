@@ -1,13 +1,14 @@
 class Bot {
   constructor() {
-    this.position = createVector(400, 300);
+    this.position = createVector(100, 100);
     this.width = botWidth;
     this.height = botHeight;
     this.speed = botSpeed;
     this.centerPosition = createVector(this.position.x + this.width / 2, this.position.y + this.height / 2);
-    this.angle = 0;
+    this.angle = -30;
     this.aimRadius = aimRadius;
     this.aimAngle = aimAngle;
+    this.shot = false;
   }
 
   forward() {
@@ -22,6 +23,13 @@ class Bot {
 
     line(this.position.x, this.position.y, this.position.x + this.aimRadius * cos(-(this.angle - this.aimAngle / 2)),
       this.position.y + this.aimRadius * sin(-(this.angle - this.aimAngle / 2)));
+  }
+
+  shoot() {
+    if (!this.shot) {
+      this.shot = true;
+      return new Bullet(this.position.x, this.position.y, this.angle);
+    }
   }
 
   rotate(angle) {
