@@ -11,7 +11,7 @@ const aimAngle = 40;
 const aimRadius = 400;
 
 // Neural Network
-const inputNodes = 5;
+const inputNodes = 7;
 const hiddenNodes = 5;
 const outputNodes = 4;
 const angleFactor = 3;
@@ -38,10 +38,10 @@ function draw() {
       bot.shot = false;
     }
   }
-  //bot.rotate(2);
-  //bot.forward();
+  bot.rotate(2);
+  bot.forward();
 
-  bot.act();
+  //bot.act();
 
   bot.showAim();
   bot.show();
