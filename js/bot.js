@@ -3,14 +3,16 @@ class Bot {
     this.position = createVector(400, 300);
     this.width = botWidth;
     this.height = botHeight;
+    this.speed = botSpeed;
     this.centerPosition = createVector(this.position.x + this.width / 2, this.position.y + this.height / 2);
     this.angle = 0;
     this.aimRadius = aimRadius;
     this.aimAngle = aimAngle;
   }
 
-  update() {
-
+  forward() {
+    this.position.x += this.speed * cos(-this.angle);
+    this.position.y += this.speed * sin(-this.angle);
   }
 
   showAim() {
@@ -22,12 +24,15 @@ class Bot {
       this.position.y + this.aimRadius * sin(-(this.angle - this.aimAngle / 2)));
   }
 
+  rotate(angle) {
+    this.angle += angle;
+  }
+
   show() {
     push();
     stroke(0);
     fill(255);
     translate(this.position.x, this.position.y);
-    //rotate(this.velocity.heading());
     rotate(-this.angle);
     rectMode(CENTER);
     rect(0, 0, this.width, this.height);

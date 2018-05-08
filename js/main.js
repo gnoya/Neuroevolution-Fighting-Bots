@@ -1,7 +1,9 @@
 const botWidth = 100;
 const botHeight = 50;
+const botSpeed = 2;
 const bulletWidth = 10;
 const bulletHeight = 20;
+const bulletSpeed = 10;
 const aimAngle = 40;
 const aimRadius = 400;
 
@@ -18,8 +20,8 @@ function setup() {
 
 function draw() {
   background(220);
+  bot.forward();
   bot.showAim();
   bot.show();
-  bot.angle++;
-
+  bot.rotate(0.5);
 }
