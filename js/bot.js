@@ -1,5 +1,5 @@
 class Bot {
-  constructor() {
+  constructor(brain) {
     this.position = createVector(botX, botY);
     this.width = botWidth;
     this.height = botHeight;
@@ -9,6 +9,34 @@ class Bot {
     this.aimRadius = aimRadius;
     this.aimAngle = aimAngle;
     this.shot = false;
+
+    if (brain instanceof NeuralNetwork) {
+      this.brain = brain.copy();
+    } else {
+      this.brain = new NeuralNetwork(inputNodes, hiddenNodes, outputNodes);
+    }
+  }
+
+  act() {
+    let inputs = new Array();
+    inputs[0] = 0;
+    inputs[1] = 0;
+    inputs[2] = 0;
+    inputs[3] = 0;
+    inputs[4] = 0;
+    inputs[5] = 0;
+    let outputs = this.brain.predict(inputs);
+    // Sort to see which output is the highest.
+    //outputs = sortOutputs(outputs);
+    if (outputs[0] > 0.5) this.forward();
+    if (outputs[1] > 0.5) this.shoot();
+    if (outputs[2] > 0.5) {
+      this.rotate(angleFactor * outputs[1]);
+    }
+    else {
+      this.rotate(angleFactor * (outputs[1] + 0.5));
+    }
+
   }
 
   forward() {
