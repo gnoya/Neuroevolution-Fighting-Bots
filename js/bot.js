@@ -14,6 +14,8 @@ class Bot {
   forward() {
     this.position.x += this.speed * cos(-this.angle);
     this.position.y += this.speed * sin(-this.angle);
+    this.centerPosition.x += this.speed * cos(-this.angle);
+    this.centerPosition.y += this.speed * sin(-this.angle);
   }
 
   showAim() {
@@ -26,10 +28,10 @@ class Bot {
   }
 
   shoot() {
-    if (!this.shot) {
-      this.shot = true;
-      return new Bullet(this.position.x, this.position.y, this.angle);
-    }
+    //if (!this.shot) {
+    this.shot = true;
+    return new Bullet(this.position.x, this.position.y, this.angle);
+    //}
   }
 
   rotate(angle) {
