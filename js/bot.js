@@ -76,7 +76,7 @@ class Bot {
   shoot() {
     if (!this.shot) {
       this.shot = true;
-      return new Bullet(this.position.x, this.position.y, this.angle);
+      bullets.push(new Bullet(this.position.x, this.position.y, this.angle));
     }
   }
 
