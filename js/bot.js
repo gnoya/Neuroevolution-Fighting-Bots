@@ -22,7 +22,7 @@ class Bot {
     inputs[0] = this.position.x / width;
     inputs[1] = this.position.y / height;
     inputs[2] = this.angle / 360;
-    if(bullet instanceof Bullet){
+    if (bullet instanceof Bullet) {
       inputs[3] = bullet.position.x / width;
       inputs[4] = bullet.position.y / height;
     } else {
@@ -30,7 +30,7 @@ class Bot {
       inputs[4] = 100;
     }
 
-    if(bot instanceof Bot){
+    if (bot instanceof Bot) {
       inputs[5] = bot.position.x / width;
       inputs[6] = bot.position.y / height;
     } else {
@@ -43,11 +43,17 @@ class Bot {
     //outputs = sortOutputs(outputs);
     if (outputs[0] > 0.5) this.forward();
     if (outputs[1] > 0.5) this.shoot();
-    if (outputs[2] > 0.5) {
-      this.rotate(angleFactor * outputs[1]);
-    }
-    else {
-      this.rotate(angleFactor * (outputs[1] + 0.5));
+
+    let temporal = sortOutputs(outputs.slice(2, 5)); // 2, 3, 4
+    switch (temporal[0].index) {
+      case 0:
+        this.rotate(angleFactor * temporal[0].value);
+        break;
+      case 1:
+        this.rotate(-angleFactor * temporal[0].value);
+        break;
+      default:
+        break;
     }
   }
 

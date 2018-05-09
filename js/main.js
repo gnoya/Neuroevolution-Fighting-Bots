@@ -12,8 +12,8 @@ const aimRadius = 400;
 
 // Neural Network
 const inputNodes = 7;
-const hiddenNodes = 5;
-const outputNodes = 4;
+const hiddenNodes = 6;
+const outputNodes = 5;
 const angleFactor = 3;
 
 let bot;
@@ -38,10 +38,10 @@ function draw() {
       bot.shot = false;
     }
   }
-  bot.rotate(2);
-  bot.forward();
+  //bot.rotate(2);
+  //bot.forward();
 
-  //bot.act();
+  bot.act();
 
   bot.showAim();
   bot.show();
@@ -58,5 +58,6 @@ function sortOutputs(outputs) {
   result.sort(function (a, b) {
     return ((a.value < b.value) ? 1 : ((a.value == b.value) ? 0 : -1));
   });
-  return result.map(a => a.index);
+  // return result.map(a => a.index);
+  return result;
 }
