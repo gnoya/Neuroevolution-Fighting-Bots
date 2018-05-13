@@ -20,10 +20,10 @@ class Bullet {
     return false;
   }
 
-  show() {
+  show(color) {
     push();
     stroke(0);
-    fill(255, 0, 0);
+    fill(color);
     translate(this.position.x, this.position.y);
     rotate(-this.angle);
     rectMode(CENTER);

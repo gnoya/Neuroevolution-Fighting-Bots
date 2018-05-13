@@ -1,6 +1,6 @@
 class Bot {
-  constructor(brain) {
-    this.position = createVector(botX, botY);
+  constructor(x, y, index, brain) {
+    this.position = createVector(x, y);
     this.width = botWidth;
     this.height = botHeight;
     this.speed = botSpeed;
@@ -9,6 +9,7 @@ class Bot {
     this.aimRadius = aimRadius;
     this.aimAngle = aimAngle;
     this.shot = false;
+    this.alive = true;
 
     if (brain instanceof NeuralNetwork) {
       this.brain = brain.copy();
@@ -19,6 +20,8 @@ class Bot {
 
   act(bullet, bot) {
     let inputs = new Array();
+    let shotBullet = undefined;
+
     inputs[0] = this.position.x / width;
     inputs[1] = this.position.y / height;
     inputs[2] = this.angle / 360;
@@ -42,8 +45,10 @@ class Bot {
     // Sort to see which output is the highest.
     //outputs = sortOutputs(outputs);
     if (outputs[0] > 0.5) this.forward();
-    if (outputs[1] > 0.5) this.shoot();
-
+    if (outputs[1] > 0.5) {
+      shotBullet = this.shoot();
+      //console.log(shotBullet)
+    }
     let temporal = sortOutputs(outputs.slice(2, 5)); // 2, 3, 4
     switch (temporal[0].index) {
       case 0:
@@ -55,6 +60,8 @@ class Bot {
       default:
         break;
     }
+
+    return shotBullet;
   }
 
   forward() {
@@ -64,8 +71,8 @@ class Bot {
     this.centerPosition.y += this.speed * sin(-this.angle);
   }
 
-  showAim() {
-    //stroke(255, 0, 0);
+  showAim(color) {
+    stroke(color);
     line(this.position.x, this.position.y, this.position.x + this.aimRadius * cos(-(this.angle + this.aimAngle / 2)),
       this.position.y + this.aimRadius * sin(-(this.angle + this.aimAngle / 2)));
 
@@ -75,8 +82,9 @@ class Bot {
 
   shoot() {
     if (!this.shot) {
-      this.shot = true;
-      bullets.push(new Bullet(this.position.x, this.position.y, this.angle));
+      //this.shot = true;
+      //bullets.push(new Bullet(this.position.x, this.position.y, this.angle));
+      return new Bullet(this.position.x, this.position.y, this.angle);
     }
   }
 
@@ -86,10 +94,10 @@ class Bot {
     if (this.angle < 0) this.angle += 360;
   }
 
-  show() {
+  show(color) {
     push();
     stroke(0);
-    fill(255);
+    fill(color);
     translate(this.position.x, this.position.y);
     rotate(-this.angle);
     rectMode(CENTER);

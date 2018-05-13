@@ -1,23 +1,34 @@
 // Gameplay
-const botX = 300;
-const botY = 300;
-const botWidth = 100;
-const botHeight = 50;
+const blueBotX = 200;
+const blueBotY = 300;
+const redBotX = 600;
+const redBotY = 300;
+
+const botWidth = 50;
+const botHeight = 25;
 const botSpeed = 2;
 const bulletWidth = 20;
-const bulletHeight = 7;
+const bulletHeight = 6;
 const bulletSpeed = 10;
 const aimAngle = 40;
 const aimRadius = 400;
 
+const red = [255, 0, 0, 100];
+const blue = [0, 0, 255, 100]
 // Neural Network
 const inputNodes = 7;
 const hiddenNodes = 6;
 const outputNodes = 5;
 const angleFactor = 3;
 
-let bot;
-let bullets = new Array();
+// Genetic Algorithms
+let blueBots = new Array();
+let redBots = new Array();
+
+let blueBullets = new Array();
+let redBullets = new Array();
+
+const totalPopulation = 3;
 
 function setup() {
   frameRate(60);
@@ -25,26 +36,75 @@ function setup() {
   angleMode(DEGREES);
   let canvas = createCanvas(800, 600);
   canvas.parent('canvasContainer');
-  bot = new Bot();
+  for (let i = 0; i < totalPopulation; i++) {
+    blueBots.push(new Bot(blueBotX, blueBotY));
+    redBots.push(new Bot(redBotX, redBotY));
+  }
 }
 
 function draw() {
-  background(220);
-  for (let i = bullets.length - 1; i >= 0; i--) {
-    bullets[i].move();
-    bullets[i].show();
-    if (bullets[i].offscreen()) {
-      bullets.splice(i, 1);
-      bot.shot = false;
+  let bullet = undefined;
+
+  for (let i = 0; i < totalPopulation; i++) {
+    if (blueBullets[i] !== undefined) {
+      blueBullets[i].move();
+      if (blueBullets[i].offscreen()) {
+        blueBullets[i] = undefined;
+        blueBots[i].shot = false;
+      }
+    }
+
+    if (redBullets[i] !== undefined) {
+      redBullets[i].move();
+      if (redBullets[i].offscreen()) {
+        redBullets[i] = undefined;
+        redBots[i].shot = false;
+      }
+    }
+
+    if (blueBots[i].alive) {
+      bullet = blueBots[i].act(undefined, undefined);
+      if (!blueBots[i].shot) {
+        blueBots[i].shot = true;
+        blueBullets[i] = bullet;
+      }
+
+      bullet = redBots[i].act(undefined, undefined);
+      if (!redBots[i].shot) {
+        redBots[i].shot = true;
+        redBullets[i] = bullet;
+      }
     }
   }
+
   //bot.rotate(2);
   //bot.forward();
 
-  bot.act();
 
-  bot.showAim();
-  bot.show();
+  // Visuals.
+  background(220);
+
+  for (let i = 0; i < totalPopulation; i++) {
+    if (blueBullets[i] !== undefined) {
+      blueBullets[i].show(blue);
+    }
+
+    if (redBullets[i] !== undefined) {
+      redBullets[i].show(red);
+    }
+
+    if (blueBots[i].alive) {
+      blueBots[i].showAim(blue);
+      blueBots[i].show(blue);
+    }
+
+    if (redBots[i].alive) {
+      redBots[i].showAim(red);
+      redBots[i].show(red);
+    }
+  }
+
+
 }
 
 function sortOutputs(outputs) {
