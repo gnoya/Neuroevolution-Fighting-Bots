@@ -10,8 +10,8 @@ const botSpeed = 2;
 const bulletWidth = 20;
 const bulletHeight = 6;
 const bulletSpeed = 10;
-const aimAngle = 40;
-const aimRadius = 400;
+const aimAngle = 30;
+const aimRadius = 600;
 
 const red = [255, 0, 0, 100];
 const blue = [0, 0, 255, 100]
@@ -28,7 +28,7 @@ let redBots = new Array();
 let blueBullets = new Array();
 let redBullets = new Array();
 
-const totalPopulation = 3;
+const totalPopulation = 1;
 
 function setup() {
   frameRate(60);
@@ -64,13 +64,20 @@ function draw() {
 
     if (blueBots[i].alive) {
       bullet = blueBots[i].act(undefined, undefined);
-      if (!blueBots[i].shot) {
+      if (!blueBots[i].shot && bullet !== undefined) {
+        if (bulletHit(bullet, blueBots[i], redBots[i])) {
+          blueBots[i].score += 50;
+        }
+
         blueBots[i].shot = true;
         blueBullets[i] = bullet;
       }
 
       bullet = redBots[i].act(undefined, undefined);
-      if (!redBots[i].shot) {
+      if (!redBots[i].shot && bullet !== undefined) {
+        if (bulletHit(bullet, redBots[i], blueBots[i])) {
+          blueBots[i].score += 50;
+        }
         redBots[i].shot = true;
         redBullets[i] = bullet;
       }
@@ -120,4 +127,18 @@ function sortOutputs(outputs) {
   });
   // return result.map(a => a.index);
   return result;
+}
+
+function bulletHit(bullet, originBot, targetBot) {
+  let deltaY = originBot.position.y - targetBot.position.y;
+  let deltaX = originBot.position.x - targetBot.position.x;
+  let tangent = tan(bullet.angle);
+  console.log('tangent: ' + tangent)
+  console.log('delta : ' + deltaY / deltaX);
+  if (tangent == deltaY / deltaX) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }

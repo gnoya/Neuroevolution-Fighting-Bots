@@ -10,6 +10,7 @@ class Bot {
     this.aimAngle = aimAngle;
     this.shot = false;
     this.alive = true;
+    this.score = 1;
 
     if (brain instanceof NeuralNetwork) {
       this.brain = brain.copy();
