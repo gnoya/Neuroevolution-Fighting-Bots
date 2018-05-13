@@ -1,5 +1,5 @@
 class Bot {
-  constructor() {
+  constructor(brain) {
     this.position = createVector(botX, botY);
     this.width = botWidth;
     this.height = botHeight;
@@ -9,6 +9,52 @@ class Bot {
     this.aimRadius = aimRadius;
     this.aimAngle = aimAngle;
     this.shot = false;
+
+    if (brain instanceof NeuralNetwork) {
+      this.brain = brain.copy();
+    } else {
+      this.brain = new NeuralNetwork(inputNodes, hiddenNodes, outputNodes);
+    }
+  }
+
+  act(bullet, bot) {
+    let inputs = new Array();
+    inputs[0] = this.position.x / width;
+    inputs[1] = this.position.y / height;
+    inputs[2] = this.angle / 360;
+    if (bullet instanceof Bullet) {
+      inputs[3] = bullet.position.x / width;
+      inputs[4] = bullet.position.y / height;
+    } else {
+      inputs[3] = 100;
+      inputs[4] = 100;
+    }
+
+    if (bot instanceof Bot) {
+      inputs[5] = bot.position.x / width;
+      inputs[6] = bot.position.y / height;
+    } else {
+      inputs[5] = 100;
+      inputs[6] = 100;
+    }
+
+    let outputs = this.brain.predict(inputs);
+    // Sort to see which output is the highest.
+    //outputs = sortOutputs(outputs);
+    if (outputs[0] > 0.5) this.forward();
+    if (outputs[1] > 0.5) this.shoot();
+
+    let temporal = sortOutputs(outputs.slice(2, 5)); // 2, 3, 4
+    switch (temporal[0].index) {
+      case 0:
+        this.rotate(angleFactor * temporal[0].value);
+        break;
+      case 1:
+        this.rotate(-angleFactor * temporal[0].value);
+        break;
+      default:
+        break;
+    }
   }
 
   forward() {
@@ -30,12 +76,14 @@ class Bot {
   shoot() {
     if (!this.shot) {
       this.shot = true;
-      return new Bullet(this.position.x, this.position.y, this.angle);
+      bullets.push(new Bullet(this.position.x, this.position.y, this.angle));
     }
   }
 
   rotate(angle) {
     this.angle += angle;
+    if (this.angle > 360) this.angle -= 360;
+    if (this.angle < 0) this.angle += 360;
   }
 
   show() {
