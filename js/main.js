@@ -28,6 +28,9 @@ let redBots = new Array();
 let blueBullets = new Array();
 let redBullets = new Array();
 
+let blueBot;
+let redBot;
+
 const totalPopulation = 1;
 
 function setup() {
@@ -40,6 +43,9 @@ function setup() {
     blueBots.push(new Bot(blueBotX, blueBotY));
     redBots.push(new Bot(redBotX, redBotY));
   }
+  blueBot = new Bot(100, 100);
+  redBot = new Bot(200, 0);
+
 }
 
 function draw() {
@@ -62,13 +68,13 @@ function draw() {
       }
     }
 
+    /*
     if (blueBots[i].alive) {
       bullet = blueBots[i].act(undefined, undefined);
       if (!blueBots[i].shot && bullet !== undefined) {
         if (bulletHit(bullet, blueBots[i], redBots[i])) {
           blueBots[i].score += 50;
         }
-
         blueBots[i].shot = true;
         blueBullets[i] = bullet;
       }
@@ -82,15 +88,13 @@ function draw() {
         redBullets[i] = bullet;
       }
     }
+    */
   }
-
-  //bot.rotate(2);
-  //bot.forward();
-
 
   // Visuals.
   background(220);
 
+  /*
   for (let i = 0; i < totalPopulation; i++) {
     if (blueBullets[i] !== undefined) {
       blueBullets[i].show(blue);
@@ -109,7 +113,12 @@ function draw() {
       redBots[i].showAim(red);
       redBots[i].show(red);
     }
-  }
+  }*/
+
+  blueBot.showAim(blue);
+  blueBot.show(blue);
+  redBot.showAim(red);
+  redBot.show(red);
 
 
 }
@@ -129,16 +138,14 @@ function sortOutputs(outputs) {
   return result;
 }
 
-function bulletHit(bullet, originBot, targetBot) {
-  let deltaY = originBot.position.y - targetBot.position.y;
-  let deltaX = originBot.position.x - targetBot.position.x;
-  let tangent = tan(bullet.angle);
-  console.log('tangent: ' + tangent)
-  console.log('delta : ' + deltaY / deltaX);
-  if (tangent == deltaY / deltaX) {
-    return true;
-  }
-  else {
-    return false;
-  }
+// The first vector MUST BE unitary.
+function angleOfVectors(unitary, b) {
+  return Number(acos(unitary.dot(b) / (b.mag())).toFixed(2));
+}
+
+function getAngleFitness(bullet, target) {
+  let unitary = createVector(cos(bullet.angle), sin(bullet.angle));
+  let b = createVector(bullet.position.x - target.position.x, bullet.position.y - target.position.y);
+  let angle = angleOfVectors(unitary, b);
+  return 50 * exp(-(angle) / 50);
 }

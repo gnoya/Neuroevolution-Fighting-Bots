@@ -9,10 +9,10 @@ class Bullet {
   }
 
   move() {
-    this.position.x += this.speed * cos(-this.angle);
-    this.position.y += this.speed * sin(-this.angle);
-    this.centerPosition.x += this.speed * cos(-this.angle);
-    this.centerPosition.y += this.speed * sin(-this.angle);
+    this.position.x += this.speed * cos(this.angle);
+    this.position.y += this.speed * sin(this.angle);
+    this.centerPosition.x += this.speed * cos(this.angle);
+    this.centerPosition.y += this.speed * sin(this.angle);
   }
 
   offscreen() {
@@ -25,7 +25,7 @@ class Bullet {
     stroke(0);
     fill(color);
     translate(this.position.x, this.position.y);
-    rotate(-this.angle);
+    rotate(this.angle);
     rectMode(CENTER);
     rect(0, 0, this.width, this.height);
     //imageMode(CENTER);

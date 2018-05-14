@@ -5,7 +5,7 @@ class Bot {
     this.height = botHeight;
     this.speed = botSpeed;
     this.centerPosition = createVector(this.position.x + this.width / 2, this.position.y + this.height / 2);
-    this.angle = -30;
+    this.angle = 270 + 45;
     this.aimRadius = aimRadius;
     this.aimAngle = aimAngle;
     this.shot = false;
@@ -66,19 +66,19 @@ class Bot {
   }
 
   forward() {
-    this.position.x += this.speed * cos(-this.angle);
-    this.position.y += this.speed * sin(-this.angle);
-    this.centerPosition.x += this.speed * cos(-this.angle);
-    this.centerPosition.y += this.speed * sin(-this.angle);
+    this.position.x += this.speed * cos(this.angle);
+    this.position.y += this.speed * sin(this.angle);
+    this.centerPosition.x += this.speed * cos(this.angle);
+    this.centerPosition.y += this.speed * sin(this.angle);
   }
 
   showAim(color) {
     stroke(color);
-    line(this.position.x, this.position.y, this.position.x + this.aimRadius * cos(-(this.angle + this.aimAngle / 2)),
-      this.position.y + this.aimRadius * sin(-(this.angle + this.aimAngle / 2)));
+    line(this.position.x, this.position.y, this.position.x + this.aimRadius * cos((this.angle + this.aimAngle / 2)),
+      this.position.y + this.aimRadius * sin((this.angle + this.aimAngle / 2)));
 
-    line(this.position.x, this.position.y, this.position.x + this.aimRadius * cos(-(this.angle - this.aimAngle / 2)),
-      this.position.y + this.aimRadius * sin(-(this.angle - this.aimAngle / 2)));
+    line(this.position.x, this.position.y, this.position.x + this.aimRadius * cos((this.angle - this.aimAngle / 2)),
+      this.position.y + this.aimRadius * sin((this.angle - this.aimAngle / 2)));
   }
 
   shoot() {
@@ -100,7 +100,7 @@ class Bot {
     stroke(0);
     fill(color);
     translate(this.position.x, this.position.y);
-    rotate(-this.angle);
+    rotate(this.angle);
     rectMode(CENTER);
     rect(0, 0, this.width, this.height);
     //imageMode(CENTER);
