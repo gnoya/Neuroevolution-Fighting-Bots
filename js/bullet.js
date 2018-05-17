@@ -33,3 +33,13 @@ class Bullet {
     pop();
   }
 }
+
+function bulletMovement(bullets, bots, i){
+  if (bullets[i] !== undefined) {
+    bullets[i].move();
+    if (bullets[i].offscreen()) {
+      bullets[i] = undefined;
+      bots[i].shot = false;
+    }
+  }
+}

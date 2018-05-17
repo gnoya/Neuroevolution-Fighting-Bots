@@ -24,6 +24,7 @@ const angleFactor = 3;
 // Genetic Algorithms
 let blueBots = new Array();
 let redBots = new Array();
+const mutationRate = 0.05;
 
 let blueBullets = new Array();
 let redBullets = new Array();
@@ -45,107 +46,18 @@ function setup() {
   }
   blueBot = new Bot(100, 100);
   redBot = new Bot(200, 0);
-
 }
 
 function draw() {
-  let bullet = undefined;
-
   for (let i = 0; i < totalPopulation; i++) {
-    if (blueBullets[i] !== undefined) {
-      blueBullets[i].move();
-      if (blueBullets[i].offscreen()) {
-        blueBullets[i] = undefined;
-        blueBots[i].shot = false;
-      }
-    }
-
-    if (redBullets[i] !== undefined) {
-      redBullets[i].move();
-      if (redBullets[i].offscreen()) {
-        redBullets[i] = undefined;
-        redBots[i].shot = false;
-      }
-    }
-
-    /*
-    if (blueBots[i].alive) {
-      bullet = blueBots[i].act(undefined, undefined);
-      if (!blueBots[i].shot && bullet !== undefined) {
-        if (bulletHit(bullet, blueBots[i], redBots[i])) {
-          blueBots[i].score += 50;
-        }
-        blueBots[i].shot = true;
-        blueBullets[i] = bullet;
-      }
-
-      bullet = redBots[i].act(undefined, undefined);
-      if (!redBots[i].shot && bullet !== undefined) {
-        if (bulletHit(bullet, redBots[i], blueBots[i])) {
-          blueBots[i].score += 50;
-        }
-        redBots[i].shot = true;
-        redBullets[i] = bullet;
-      }
-    }
-    */
+    bulletMovement(blueBullets, blueBots, i);
+    bulletMovement(redBullets, redBots, i);
+    botsShooting(blueBots, redBots, i); 
   }
 
   // Visuals.
   background(220);
-
-  /*
-  for (let i = 0; i < totalPopulation; i++) {
-    if (blueBullets[i] !== undefined) {
-      blueBullets[i].show(blue);
-    }
-
-    if (redBullets[i] !== undefined) {
-      redBullets[i].show(red);
-    }
-
-    if (blueBots[i].alive) {
-      blueBots[i].showAim(blue);
-      blueBots[i].show(blue);
-    }
-
-    if (redBots[i].alive) {
-      redBots[i].showAim(red);
-      redBots[i].show(red);
-    }
-  }*/
-
-  blueBot.showAim(blue);
-  blueBot.show(blue);
-  redBot.showAim(red);
-  redBot.show(red);
-
-
+  showBots(blueBots, redBots);
 }
 
-function sortOutputs(outputs) {
-  let result = new Array();
-  for (let i = 0; i < outputs.length; i++) {
-    result.push({
-      index: i,
-      value: outputs[i]
-    });
-  }
-  result.sort(function (a, b) {
-    return ((a.value < b.value) ? 1 : ((a.value == b.value) ? 0 : -1));
-  });
-  // return result.map(a => a.index);
-  return result;
-}
-
-// The first vector MUST BE unitary.
-function angleOfVectors(unitary, b) {
-  return Number(acos(unitary.dot(b) / (b.mag())).toFixed(2));
-}
-
-function getAngleFitness(bullet, target) {
-  let unitary = createVector(cos(bullet.angle), sin(bullet.angle));
-  let b = createVector(bullet.position.x - target.position.x, bullet.position.y - target.position.y);
-  let angle = angleOfVectors(unitary, b);
-  return 50 * exp(-(angle) / 50);
-}
+//setInterval(nextGeneration(), 10000);

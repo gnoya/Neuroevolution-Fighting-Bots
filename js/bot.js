@@ -5,12 +5,13 @@ class Bot {
     this.height = botHeight;
     this.speed = botSpeed;
     this.centerPosition = createVector(this.position.x + this.width / 2, this.position.y + this.height / 2);
-    this.angle = 270 + 45;
+    this.angle = 0;
     this.aimRadius = aimRadius;
     this.aimAngle = aimAngle;
     this.shot = false;
     this.alive = true;
     this.score = 1;
+    this.fitness = 0;
 
     if (brain instanceof NeuralNetwork) {
       this.brain = brain.copy();
@@ -106,5 +107,46 @@ class Bot {
     //imageMode(CENTER);
     //image(this.image, 0, 0);
     pop();
+  }
+}
+
+function botsShooting(blueBots, redBots, i){
+  let bullet = undefined;
+  if (blueBots[i].alive) {
+    bullet = blueBots[i].act(undefined, undefined);
+    if (!blueBots[i].shot && bullet !== undefined) {
+      blueBots[i].score += getAngleFitness(blueBots[i], redBots[i]);
+      blueBots[i].shot = true;
+      blueBullets[i] = bullet;
+    }
+
+    bullet = redBots[i].act(undefined, undefined);
+    if (!redBots[i].shot && bullet !== undefined) {
+      redBots[i].score += getAngleFitness(redBots[i], blueBots[i]);
+      redBots[i].shot = true;
+      redBullets[i] = bullet;
+    }
+  }
+}
+
+function showBots(blueBots, redBots){
+  for (let i = 0; i < totalPopulation; i++) {
+    if (blueBullets[i] !== undefined) {
+      blueBullets[i].show(blue);
+    }
+
+    if (redBullets[i] !== undefined) {
+      redBullets[i].show(red);
+    }
+
+    if (blueBots[i].alive) {
+      blueBots[i].showAim(blue);
+      blueBots[i].show(blue);
+    }
+
+    if (redBots[i].alive) {
+      redBots[i].showAim(red);
+      redBots[i].show(red);
+    }
   }
 }
