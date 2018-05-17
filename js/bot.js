@@ -90,6 +90,22 @@ class Bot {
     }
   }
 
+  checkAim(target){
+    let d = calculateSquareDistance(this.position, target.position);
+
+    let unitary = createVector(cos(this.angle), sin(this.angle));
+    let b = createVector(target.position.x - this.position.x, target.position.y - this.position.y);
+    let angle = angleOfVectors(unitary, b);
+
+    if(d < pow(this.aimRadius, 2) && angle < aimAngle / 2){
+      return true;
+    } 
+    else{
+      return false;
+    }
+
+  }
+
   rotate(angle) {
     this.angle += angle;
     if (this.angle > 360) this.angle -= 360;

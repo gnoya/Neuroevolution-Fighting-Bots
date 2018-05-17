@@ -30,3 +30,7 @@ function restartGame() {
   frameCounter = 0;
   deadPlayers = new Array();
 }
+
+function calculateSquareDistance(u, v){
+  return pow(u.x - v.x, 2) + pow(u.y - v.y, 2);
+}
