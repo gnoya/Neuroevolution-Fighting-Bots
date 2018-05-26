@@ -1,6 +1,9 @@
-function nextGeneration(players) {
+function nextGeneration(bots1, bots2) {
+  let players = bots1.concat(bots2);
   calculateFitness(players);
-  naturalSelection(players);
+  players = naturalSelection(players);
+  blueBots = players.slice(0, totalPopulation);
+  redBots = players.slice(totalPopulation, players.length);
   restartGame();
 }
 
@@ -17,6 +20,7 @@ function calculateFitness(players) {
 }
 
 function naturalSelection(players) {
+  let newGeneration = new Array();
   for (let player of players) {
     // For every player, make a child from two parents.
     let parentA = poolSelection(players);
@@ -24,8 +28,9 @@ function naturalSelection(players) {
 
     let child = crossover(parentA, parentB);
     child.brain.mutate(mutate);
-    alivePlayers.push(child);
+    newGeneration.push(child);
   }
+  return newGeneration;
 }
 
 function poolSelection(players) {

@@ -26,11 +26,10 @@ function getAngleFitness(bullet, target) {
 }
 
 function restartGame() {
-  blocks = new Array();
-  frameCounter = 0;
-  deadPlayers = new Array();
+  blueBullets = new Array();
+  redBullets = new Array();
 }
 
-function calculateSquareDistance(u, v){
+function calculateSquareDistance(u, v) {
   return pow(u.x - v.x, 2) + pow(u.y - v.y, 2);
 }

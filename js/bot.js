@@ -31,16 +31,16 @@ class Bot {
       inputs[3] = bullet.position.x / width;
       inputs[4] = bullet.position.y / height;
     } else {
-      inputs[3] = 100;
-      inputs[4] = 100;
+      inputs[3] = 0;
+      inputs[4] = 0;
     }
 
     if (bot instanceof Bot) {
       inputs[5] = bot.position.x / width;
       inputs[6] = bot.position.y / height;
     } else {
-      inputs[5] = 100;
-      inputs[6] = 100;
+      inputs[5] = 0;
+      inputs[6] = 0;
     }
 
     let outputs = this.brain.predict(inputs);
@@ -90,20 +90,20 @@ class Bot {
     }
   }
 
-  checkAim(target){
-    let d = calculateSquareDistance(this.position, target.position);
+  checkAim(target) {
+    if (target === undefined) return false;
 
+    let d = calculateSquareDistance(this.position, target.position);
     let unitary = createVector(cos(this.angle), sin(this.angle));
     let b = createVector(target.position.x - this.position.x, target.position.y - this.position.y);
     let angle = angleOfVectors(unitary, b);
 
-    if(d < pow(this.aimRadius, 2) && angle < aimAngle / 2){
+    if (d < pow(this.aimRadius, 2) && angle <= aimAngle / 2) {
       return true;
-    } 
-    else{
+    }
+    else {
       return false;
     }
-
   }
 
   rotate(angle) {
@@ -126,17 +126,47 @@ class Bot {
   }
 }
 
-function botsShooting(blueBots, redBots, i){
+function botsAct(blueBots, redBots, blueBullets, redBullets, i) {
   let bullet = undefined;
   if (blueBots[i].alive) {
-    bullet = blueBots[i].act(undefined, undefined);
+    // Blue Bot.
+    let aimBullet = undefined;
+    let aimTarget = undefined;
+
+    // Check if an enemy bullet is in the aim.
+    if (blueBots[i].checkAim(redBullets[i])) {
+      aimBullet = redBullets[i];
+    }
+
+    // Check if an enemy bot is in the aim.
+    if (blueBots[i].checkAim(redBots[i])) {
+      aimTarget = redBots[i];
+    }
+
+    bullet = blueBots[i].act(aimBullet, aimTarget);
+
     if (!blueBots[i].shot && bullet !== undefined) {
       blueBots[i].score += getAngleFitness(blueBots[i], redBots[i]);
       blueBots[i].shot = true;
       blueBullets[i] = bullet;
     }
 
-    bullet = redBots[i].act(undefined, undefined);
+    // Red Bot.
+    aimBullet = undefined;
+    aimTarget = undefined;
+
+    // Check if an enemy bullet is in the aim.
+    if (redBots[i].checkAim(blueBullets[i])) {
+      aimBullet = blueBullets[i];
+    }
+
+    // Check if an enemy bot is in the aim.
+    if (redBots[i].checkAim(blueBots[i])) {
+      aimTarget = blueBots[i];
+    }
+
+    bullet = redBots[i].act(aimBullet, aimTarget);
+
     if (!redBots[i].shot && bullet !== undefined) {
       redBots[i].score += getAngleFitness(redBots[i], blueBots[i]);
       redBots[i].shot = true;
@@ -145,7 +175,7 @@ function botsShooting(blueBots, redBots, i){
   }
 }
 
-function showBots(blueBots, redBots){
+function showBots(blueBots, redBots) {
   for (let i = 0; i < totalPopulation; i++) {
     if (blueBullets[i] !== undefined) {
       blueBullets[i].show(blue);
