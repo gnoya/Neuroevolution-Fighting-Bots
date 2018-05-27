@@ -31,6 +31,8 @@ let blueBullets = new Array();
 let redBullets = new Array();
 
 const totalPopulation = 1;
+const maxAimScore = 50; // Add score when the bot aimed correctly.
+const maxHitScore = 50; // Substract score when a bullet hits the bot.
 
 function setup() {
   frameRate(60);
@@ -46,8 +48,8 @@ function setup() {
 
 function draw() {
   for (let i = 0; i < totalPopulation; i++) {
-    bulletMovement(blueBullets, blueBots, i);
-    bulletMovement(redBullets, redBots, i);
+    bulletMovement(blueBullets, blueBots, redBots, i);
+    bulletMovement(redBullets, redBots, blueBots, i);
     botsAct(blueBots, redBots, blueBullets, redBullets, i);
   }
 

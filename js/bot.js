@@ -106,6 +106,11 @@ class Bot {
     }
   }
 
+  reduceScore(score) {
+    this.score -= score;
+    if (this.score < 1) this.score = 1;
+  }
+
   rotate(angle) {
     this.angle += angle;
     if (this.angle > 360) this.angle -= 360;
