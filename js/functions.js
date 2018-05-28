@@ -26,8 +26,13 @@ function getAngleFitness(bullet, target) {
 }
 
 function restartGame() {
+  frameCounter = 0;
   blueBullets = new Array();
   redBullets = new Array();
+  if (showBest.checked()) {
+    bestBlueBot = new Bot(blueBotX, blueBotY, bestBot.brain, 0);
+    bestRedBot = new Bot(redBotX, redBotY, bestBot.brain, 180);
+  }
 }
 
 function calculateSquareDistance(u, v) {

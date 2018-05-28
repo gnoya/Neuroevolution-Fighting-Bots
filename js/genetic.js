@@ -12,8 +12,6 @@ function nextGeneration(bots1, bots2) {
     redBots[i].position.y = redBotY;
     redBots[i].angle = 180;
   }
-  generation++;
-  console.log(generation)
   restartGame();
 }
 
@@ -22,14 +20,18 @@ function calculateFitness(players) {
   // Calculate total score.
   for (let player of players) {
     totalScore += player.score;
+    if (player.score > highestScore) {
+      highestScore = player.score;
+      highestScoreText.html(player.score);
+      bestBot = new Bot(0, 0, player.brain, 0);
+      //bestPlayer = new Player(player.brain);
+    }
   }
-  console.log(totalScore)
   // Normalize fitness between 0 and 1.
   for (let player of players) {
     player.fitness = player.score / totalScore;
   }
 }
-
 
 
 function naturalSelection(players) {
