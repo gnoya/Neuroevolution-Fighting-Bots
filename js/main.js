@@ -1,14 +1,20 @@
 // Gameplay
-const botX = 300;
-const botY = 300;
-const botWidth = 100;
-const botHeight = 50;
+const blueBotX = 200;
+const blueBotY = 300;
+const redBotX = 600;
+const redBotY = 300;
+
+const botWidth = 50;
+const botHeight = 25;
 const botSpeed = 2;
 const bulletWidth = 20;
-const bulletHeight = 7;
+const bulletHeight = 6;
 const bulletSpeed = 10;
-const aimAngle = 40;
-const aimRadius = 400;
+const aimAngle = 30;
+const aimRadius = 600;
+
+const red = [255, 0, 0, 100];
+const blue = [0, 0, 255, 100];
 
 // Neural Network
 const inputNodes = 7;
@@ -16,8 +22,18 @@ const hiddenNodes = 6;
 const outputNodes = 5;
 const angleFactor = 3;
 
-let bot;
-let bullets = new Array();
+// Genetic Algorithms
+let blueBots = new Array();
+let redBots = new Array();
+const mutationRate = 0.05;
+let generation = 0;
+
+let blueBullets = new Array();
+let redBullets = new Array();
+
+const totalPopulation = 1;
+const maxAimScore = 50; // Add score when the bot aimed correctly.
+const maxHitScore = 50; // Substract score when a bullet hits the bot.
 
 function setup() {
   frameRate(60);
@@ -25,39 +41,23 @@ function setup() {
   angleMode(DEGREES);
   let canvas = createCanvas(800, 600);
   canvas.parent('canvasContainer');
-  bot = new Bot();
+  for (let i = 0; i < totalPopulation; i++) {
+    blueBots.push(new Bot(blueBotX, blueBotY, 0, 0));
+    redBots.push(new Bot(redBotX, redBotY, 0, 180));
+  }
+  setInterval(function () {
+    nextGeneration(blueBots, redBots);
+  }, 3000);
 }
 
 function draw() {
+  for (let i = 0; i < totalPopulation; i++) {
+    bulletMovement(blueBullets, blueBots, redBots, i);
+    bulletMovement(redBullets, redBots, blueBots, i);
+    botsAct(blueBots, redBots, blueBullets, redBullets, i);
+  }
+
+  // Visuals.
   background(220);
-  for (let i = bullets.length - 1; i >= 0; i--) {
-    bullets[i].move();
-    bullets[i].show();
-    if (bullets[i].offscreen()) {
-      bullets.splice(i, 1);
-      bot.shot = false;
-    }
-  }
-  //bot.rotate(2);
-  //bot.forward();
-
-  bot.act();
-
-  bot.showAim();
-  bot.show();
-}
-
-function sortOutputs(outputs) {
-  let result = new Array();
-  for (let i = 0; i < outputs.length; i++) {
-    result.push({
-      index: i,
-      value: outputs[i]
-    });
-  }
-  result.sort(function (a, b) {
-    return ((a.value < b.value) ? 1 : ((a.value == b.value) ? 0 : -1));
-  });
-  // return result.map(a => a.index);
-  return result;
+  showBots(blueBots, redBots);
 }
