@@ -1,11 +1,11 @@
 class Bot {
-  constructor(x, y, index, brain) {
+  constructor(x, y, brain, angle) {
     this.position = createVector(x, y);
     this.width = botWidth;
     this.height = botHeight;
     this.speed = botSpeed;
     this.centerPosition = createVector(this.position.x + this.width / 2, this.position.y + this.height / 2);
-    this.angle = 0;
+    this.angle = angle;
     this.aimRadius = aimRadius;
     this.aimAngle = aimAngle;
     this.shot = false;

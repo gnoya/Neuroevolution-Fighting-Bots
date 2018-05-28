@@ -24,7 +24,6 @@ class Bullet {
   crashed(bot) {
     if ((abs(this.position.x - bot.position.x) <= this.width / 2 + bot.width / 2) &&
       (abs(this.position.y - bot.position.y) <= this.height / 2 + bot.height / 2)) {
-      console.log('Crash')
       return true;
     }
     return false;

@@ -4,6 +4,16 @@ function nextGeneration(bots1, bots2) {
   players = naturalSelection(players);
   blueBots = players.slice(0, totalPopulation);
   redBots = players.slice(totalPopulation, players.length);
+  for (let i = 0; i < totalPopulation; i++) {
+    blueBots[i].position.x = blueBotX;
+    blueBots[i].position.y = blueBotY;
+    blueBots[i].angle = 0;
+    redBots[i].position.x = redBotX;
+    redBots[i].position.y = redBotY;
+    redBots[i].angle = 180;
+  }
+  generation++;
+  console.log(generation)
   restartGame();
 }
 
@@ -13,11 +23,14 @@ function calculateFitness(players) {
   for (let player of players) {
     totalScore += player.score;
   }
+  console.log(totalScore)
   // Normalize fitness between 0 and 1.
   for (let player of players) {
     player.fitness = player.score / totalScore;
   }
 }
+
+
 
 function naturalSelection(players) {
   let newGeneration = new Array();
@@ -25,7 +38,6 @@ function naturalSelection(players) {
     // For every player, make a child from two parents.
     let parentA = poolSelection(players);
     let parentB = poolSelection(players);
-
     let child = crossover(parentA, parentB);
     child.brain.mutate(mutate);
     newGeneration.push(child);
@@ -54,7 +66,7 @@ function crossover(parentA, parentB) {
   brainA.weights_ho = brainB.weights_ho.copy();
   brainA.bias_o = brainB.bias_o.copy();
   // Returning child.
-  return brainA;
+  return new Bot(0, 0, brainA);
 }
 
 function mutate(x) {

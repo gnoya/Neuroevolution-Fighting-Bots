@@ -26,6 +26,7 @@ const angleFactor = 3;
 let blueBots = new Array();
 let redBots = new Array();
 const mutationRate = 0.05;
+let generation = 0;
 
 let blueBullets = new Array();
 let redBullets = new Array();
@@ -41,9 +42,12 @@ function setup() {
   let canvas = createCanvas(800, 600);
   canvas.parent('canvasContainer');
   for (let i = 0; i < totalPopulation; i++) {
-    blueBots.push(new Bot(blueBotX, blueBotY));
-    redBots.push(new Bot(redBotX, redBotY));
+    blueBots.push(new Bot(blueBotX, blueBotY, 0, 0));
+    redBots.push(new Bot(redBotX, redBotY, 0, 180));
   }
+  setInterval(function () {
+    nextGeneration(blueBots, redBots);
+  }, 3000);
 }
 
 function draw() {
