@@ -145,6 +145,7 @@ function botsAct(blueBots, redBots, blueBullets, redBullets, i) {
 
     // Check if an enemy bot is in the aim.
     if (blueBots[i].checkAim(redBots[i])) {
+      blueBots[i].score += scoreWhileAiming;
       aimTarget = redBots[i];
     }
 
@@ -167,6 +168,7 @@ function botsAct(blueBots, redBots, blueBullets, redBullets, i) {
 
     // Check if an enemy bot is in the aim.
     if (redBots[i].checkAim(blueBots[i])) {
+      redBots[i].score += scoreWhileAiming;
       aimTarget = blueBots[i];
     }
 

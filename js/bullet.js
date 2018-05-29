@@ -48,7 +48,7 @@ function bulletMovement(bullets, friendlyBots, enemyBots, i) {
     bullets[i].move();
     if (!bullets[i].hit && bullets[i].crashed(enemyBots[i])) {
       bullets[i].hit = true;
-      enemyBots[i].reduceScore(maxHitScore);
+      enemyBots[i].reduceScore(maxSubstractHitScore);
     }
     if (bullets[i].offscreen() || bullets[i].hit) {
       bullets[i] = undefined;

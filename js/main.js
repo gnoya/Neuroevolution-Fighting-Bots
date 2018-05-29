@@ -42,7 +42,8 @@ let bestRedBullets = new Array();
 
 const totalPopulation = 100;
 const maxAimScore = 50; // Add score when the bot aimed correctly.
-const maxHitScore = 150; // Substract score when a bullet hits the bot.
+const maxSubstractHitScore = 150; // Substract score when a bullet hits the bot.
+const scoreWhileAiming = 1; // Suma cuando el bot enemigo esta en la mira.
 
 // DOM variables.
 let canvas;
