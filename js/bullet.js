@@ -50,7 +50,7 @@ function bulletMovement(bullets, friendlyBots, enemyBots, i) {
       bullets[i].hit = true;
       enemyBots[i].reduceScore(maxHitScore);
     }
-    if (bullets[i].offscreen()) {
+    if (bullets[i].offscreen() || bullets[i].hit) {
       bullets[i] = undefined;
       friendlyBots[i].shot = false;
     }

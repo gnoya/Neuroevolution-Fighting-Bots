@@ -44,3 +44,17 @@ function restartGame() {
 function calculateSquareDistance(u, v) {
   return pow(u.x - v.x, 2) + pow(u.y - v.y, 2);
 }
+
+function initializeDOMElements() {
+  canvas = createCanvas(800, 600);
+  canvas.parent('canvasContainer');
+  slider = select('#slider');
+  speedText = select('#speed');
+  generationText = select('#generation');
+  currentScoreText = select('#currentScore');
+  averageScoreText = select('#averageScore');
+  highestScoreText = select('#highestScore');
+  checkBox = select('#checkBox');
+  showBest = select('#showBest');
+  //showBest.elt.disabled = true;
+}

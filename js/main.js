@@ -45,6 +45,7 @@ const maxAimScore = 50; // Add score when the bot aimed correctly.
 const maxHitScore = 150; // Substract score when a bullet hits the bot.
 
 // DOM variables.
+let canvas;
 let slider;
 let generationText;
 let currentScoreText;
@@ -60,17 +61,7 @@ function setup() {
   angleMode(DEGREES);
 
   // DOM elements.
-  let canvas = createCanvas(800, 600);
-  canvas.parent('canvasContainer');
-  slider = select('#slider');
-  speedText = select('#speed');
-  generationText = select('#generation');
-  currentScoreText = select('#currentScore');
-  averageScoreText = select('#averageScore');
-  highestScoreText = select('#highestScore');
-  checkBox = select('#checkBox');
-  showBest = select('#showBest');
-  //showBest.elt.disabled = true;
+  initializeDOMElements();
 
   for (let i = 0; i < totalPopulation; i++) {
     blueBots.push(new Bot(blueBotX, blueBotY, 0, 0));
