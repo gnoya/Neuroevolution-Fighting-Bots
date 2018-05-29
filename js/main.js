@@ -25,6 +25,9 @@ const angleFactor = 3;
 // Genetic Algorithms
 let blueBots = new Array();
 let redBots = new Array();
+let bestBlueBot = new Array();
+let bestRedBot = new Array();
+
 const mutationRate = 0.05;
 let frameCounter = 0;
 let framesPerGeneration = 750;
@@ -34,12 +37,12 @@ let bestBot;
 
 let blueBullets = new Array();
 let redBullets = new Array();
-let bestBlueBot;
-let bestRedBot;
+let bestBlueBullets = new Array();
+let bestRedBullets = new Array();
 
 const totalPopulation = 100;
 const maxAimScore = 50; // Add score when the bot aimed correctly.
-const maxHitScore = 50; // Substract score when a bullet hits the bot.
+const maxHitScore = 150; // Substract score when a bullet hits the bot.
 
 // DOM variables.
 let slider;
@@ -93,13 +96,15 @@ function draw() {
     // Visuals.
     if (!checkBox.checked()) {
       background(220);
-      showBots(blueBots, redBots);
+      showBots(blueBots, redBots, blueBullets, redBullets);
     }
   }
   else {
-
-
+    bulletMovement(bestBlueBullets, bestBlueBot, bestRedBot, 0);
+    bulletMovement(bestRedBullets, bestRedBot, bestBlueBot, 0);
+    botsAct(bestBlueBot, bestRedBot, bestBlueBullets, bestRedBullets, 0);
+    // Visuals.
+    background(220);
+    showBots(bestBlueBot, bestRedBot, bestBlueBullets, bestRedBullets);
   }
-
-
 }

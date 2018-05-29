@@ -22,16 +22,22 @@ function getAngleFitness(bullet, target) {
   let unitary = createVector(cos(bullet.angle), sin(bullet.angle));
   let b = createVector(target.position.x - bullet.position.x, target.position.y - bullet.position.y);
   let angle = angleOfVectors(unitary, b);
-  return 50 * exp(-(angle) / 5);
+  return maxAimScore * exp(-(angle) / 5);
 }
 
 function restartGame() {
   frameCounter = 0;
   blueBullets = new Array();
   redBullets = new Array();
+
+  bestBlueBot = new Array();
+  bestRedBot = new Array();
+  bestBlueBullets = new Array();
+  bestRedBullets = new Array();
+
   if (showBest.checked()) {
-    bestBlueBot = new Bot(blueBotX, blueBotY, bestBot.brain, 0);
-    bestRedBot = new Bot(redBotX, redBotY, bestBot.brain, 180);
+    bestBlueBot.push(new Bot(blueBotX, blueBotY, bestBot.brain, 0));
+    bestRedBot.push(new Bot(redBotX, redBotY, bestBot.brain, 180));
   }
 }
 

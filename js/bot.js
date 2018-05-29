@@ -180,8 +180,8 @@ function botsAct(blueBots, redBots, blueBullets, redBullets, i) {
   }
 }
 
-function showBots(blueBots, redBots) {
-  for (let i = 0; i < totalPopulation; i++) {
+function showBots(blueBots, redBots, blueBullets, redBullets) {
+  for (let i = 0; i < blueBots.length; i++) {
     if (blueBullets[i] !== undefined) {
       blueBullets[i].show(blue);
     }
