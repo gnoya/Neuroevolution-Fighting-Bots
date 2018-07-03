@@ -50,7 +50,7 @@ class Bot {
     if (outputs[1] > 0.5) {
       shotBullet = this.shoot();
     }
-    let temporal = sortOutputs(outputs.slice(2, 4)); // 2, 3
+    let temporal = sortOutputs(outputs.slice(2, 5)); // 2, 3
     switch (temporal[0].index) {
       case 0:
         this.rotate(angleFactor * temporal[0].value);

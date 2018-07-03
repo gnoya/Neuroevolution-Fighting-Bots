@@ -9,8 +9,8 @@ const botHeight = 25;
 const botSpeed = 2.5;
 const bulletWidth = 20;
 const bulletHeight = 6;
-const bulletSpeed = 5;
-const aimAngle = 25;
+const bulletSpeed = 8;
+const aimAngle = 27;
 const aimRadius = 600;
 
 const red = [255, 0, 0, 100];
@@ -20,7 +20,7 @@ const blue = [0, 0, 255, 100];
 const inputNodes = 7;
 const hiddenNodes = 6;
 const outputNodes = 5;
-const angleFactor = 25;
+const angleFactor = 8;
 
 // Genetic Algorithms
 let blueBots = new Array();
@@ -28,9 +28,9 @@ let redBots = new Array();
 let bestBlueBot = new Array();
 let bestRedBot = new Array();
 
-const mutationRate = 0.02;
+const mutationRate = 0.08;
 let frameCounter = 0;
-let framesPerGeneration = 800;
+let framesPerGeneration = 700;
 let deadBots = 0;
 let generation = 0;
 let highestScore = 0;
