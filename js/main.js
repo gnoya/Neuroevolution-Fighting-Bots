@@ -6,11 +6,11 @@ const redBotY = 300;
 
 const botWidth = 50;
 const botHeight = 25;
-const botSpeed = 2;
+const botSpeed = 2.5;
 const bulletWidth = 20;
 const bulletHeight = 6;
-const bulletSpeed = 10;
-const aimAngle = 30;
+const bulletSpeed = 5;
+const aimAngle = 25;
 const aimRadius = 600;
 
 const red = [255, 0, 0, 100];
@@ -20,7 +20,7 @@ const blue = [0, 0, 255, 100];
 const inputNodes = 7;
 const hiddenNodes = 6;
 const outputNodes = 5;
-const angleFactor = 3;
+const angleFactor = 25;
 
 // Genetic Algorithms
 let blueBots = new Array();
@@ -28,9 +28,10 @@ let redBots = new Array();
 let bestBlueBot = new Array();
 let bestRedBot = new Array();
 
-const mutationRate = 0.05;
+const mutationRate = 0.02;
 let frameCounter = 0;
-let framesPerGeneration = 750;
+let framesPerGeneration = 800;
+let deadBots = 0;
 let generation = 0;
 let highestScore = 0;
 let bestBot;
@@ -40,10 +41,16 @@ let redBullets = new Array();
 let bestBlueBullets = new Array();
 let bestRedBullets = new Array();
 
-const totalPopulation = 100;
-const maxAimScore = 50; // Add score when the bot aimed correctly.
-const maxSubstractHitScore = 150; // Substract score when a bullet hits the bot.
-const scoreWhileAiming = 1; // Suma cuando el bot enemigo esta en la mira.
+const totalPopulation = 150;
+const maxAimScore = 8000; // Add score when the bot aimed correctly.
+const maxSubstractHitScore = 12000; // Substract score when a bullet hits the current bot.
+const scoreWhileAiming = 20; // Suma cuando el bot enemigo esta en la mira.
+const scoreWhileDistanced = 0;
+const offScreenScore = 5000;
+
+const minDistanceAllowed = 50000;
+const maxDistanceAllowed = 320000;
+
 
 // DOM variables.
 let canvas;
@@ -73,14 +80,15 @@ function setup() {
 function draw() {
   if (!showBest.checked()) {
     for (let i = 0; i < slider.value(); i++) {
-      if (frameCounter++ != framesPerGeneration) {
+      if (frameCounter++ != framesPerGeneration && !(deadBots >= totalPopulation)) {
         for (let i = 0; i < totalPopulation; i++) {
-          bulletMovement(blueBullets, blueBots, redBots, i);
-          bulletMovement(redBullets, redBots, blueBots, i);
+          bulletMovement(blueBullets, blueBots, redBots, i, true);
+          bulletMovement(redBullets, redBots, blueBots, i, true);
           botsAct(blueBots, redBots, blueBullets, redBullets, i);
         }
       }
       else {
+        deadBots = 0;
         nextGeneration(blueBots, redBots);
         generationText.html(++generation);
       }
@@ -92,8 +100,8 @@ function draw() {
     }
   }
   else {
-    bulletMovement(bestBlueBullets, bestBlueBot, bestRedBot, 0);
-    bulletMovement(bestRedBullets, bestRedBot, bestBlueBot, 0);
+    bulletMovement(bestBlueBullets, bestBlueBot, bestRedBot, 0, false);
+    bulletMovement(bestRedBullets, bestRedBot, bestBlueBot, 0, false);
     botsAct(bestBlueBot, bestRedBot, bestBlueBullets, bestRedBullets, 0);
     // Visuals.
     background(220);
