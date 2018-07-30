@@ -1,3 +1,11 @@
+/*
+Probar scores +1 y -1 solo con hits y esquivadas
+Precision de tiro y disparo. Revisar distancia con linea perpendicular al angulo de disparo.
+Evitar sumar score a esquviadas de disparo muy lejanas.
+Agregar puntuacion por estar en la mira: cantidad de frames en mira / frames totales.
+*/
+
+
 // Gameplay
 const blueBotX = 200;
 const blueBotY = 300;
