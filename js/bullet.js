@@ -43,12 +43,17 @@ class Bullet {
   }
 }
 
-function bulletMovement(bullets, friendlyBots, enemyBots, i) {
+function bulletMovement(bullets, friendlyBots, enemyBots, i, death) {
   if (bullets[i] !== undefined) {
     bullets[i].move();
     if (!bullets[i].hit && bullets[i].crashed(enemyBots[i])) {
       bullets[i].hit = true;
       enemyBots[i].reduceScore(maxSubstractHitScore);
+      if (enemyBots[i].alive && friendlyBots[i].alive && death) {
+        enemyBots[i].alive = false;
+        deadBots++;
+      }
+
     }
     if (bullets[i].offscreen() || bullets[i].hit) {
       bullets[i] = undefined;

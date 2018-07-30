@@ -45,13 +45,12 @@ class Bot {
 
     let outputs = this.brain.predict(inputs);
     // Sort to see which output is the highest.
-    //outputs = sortOutputs(outputs);
+
     if (outputs[0] > 0.5) this.forward();
     if (outputs[1] > 0.5) {
       shotBullet = this.shoot();
-      //console.log(shotBullet)
     }
-    let temporal = sortOutputs(outputs.slice(2, 5)); // 2, 3, 4
+    let temporal = sortOutputs(outputs.slice(2, 5)); // 2, 3
     switch (temporal[0].index) {
       case 0:
         this.rotate(angleFactor * temporal[0].value);
@@ -117,6 +116,13 @@ class Bot {
     if (this.angle < 0) this.angle += 360;
   }
 
+  offScreen() {
+    if (this.position.x + this.width / 2 < 0 || this.position.x - this.width / 2 > width || this.position.y + this.height / 2 > height || this.position.y + this.height / 2 < 0) {
+      return true;
+    }
+    return false;
+  }
+
   show(color) {
     push();
     stroke(0);
@@ -125,15 +131,13 @@ class Bot {
     rotate(this.angle);
     rectMode(CENTER);
     rect(0, 0, this.width, this.height);
-    //imageMode(CENTER);
-    //image(this.image, 0, 0);
     pop();
   }
 }
 
 function botsAct(blueBots, redBots, blueBullets, redBullets, i) {
   let bullet = undefined;
-  if (blueBots[i].alive) {
+  if (blueBots[i].alive && redBots[i].alive) {
     // Blue Bot.
     let aimBullet = undefined;
     let aimTarget = undefined;
@@ -157,6 +161,10 @@ function botsAct(blueBots, redBots, blueBullets, redBullets, i) {
       blueBullets[i] = bullet;
     }
 
+    if (blueBots[i].offScreen()) {
+      blueBots[i].reduceScore(offScreenScore);
+      blueBots[i].alive = false;
+    }
     // Red Bot.
     aimBullet = undefined;
     aimTarget = undefined;
@@ -179,6 +187,23 @@ function botsAct(blueBots, redBots, blueBullets, redBullets, i) {
       redBots[i].shot = true;
       redBullets[i] = bullet;
     }
+
+    if (redBots[i].offScreen()) {
+      redBots[i].reduceScore(offScreenScore);
+      redBots[i].alive = false;
+    }
+
+    // Both Bots.
+
+    let distance = calculateSquareDistance(blueBots[i].position, redBots[i].position);
+    if (distance > minDistanceAllowed && distance < maxDistanceAllowed) {
+      blueBots[i].score += scoreWhileDistanced;
+      redBots[i].score += scoreWhileDistanced;
+    }
+    else {
+      blueBots[i].reduceScore(scoreWhileDistanced);
+      redBots[i].reduceScore(scoreWhileDistanced);
+    }
   }
 }
 
@@ -192,12 +217,9 @@ function showBots(blueBots, redBots, blueBullets, redBullets) {
       redBullets[i].show(red);
     }
 
-    if (blueBots[i].alive) {
+    if (blueBots[i].alive && redBots[i].alive) {
       blueBots[i].showAim(blue);
       blueBots[i].show(blue);
-    }
-
-    if (redBots[i].alive) {
       redBots[i].showAim(red);
       redBots[i].show(red);
     }

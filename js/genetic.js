@@ -22,7 +22,7 @@ function calculateFitness(players) {
     totalScore += player.score;
     if (player.score > highestScore) {
       highestScore = player.score;
-      highestScoreText.html(player.score);
+      highestScoreText.html(player.score.toFixed(0));
       bestBot = new Bot(0, 0, player.brain, 0);
       //bestPlayer = new Player(player.brain);
     }
