@@ -18,10 +18,14 @@ function angleOfVectors(unitary, b) {
   return Number(acos(unitary.dot(b) / (b.mag())).toFixed(2));
 }
 
-function getAngleFitness(bullet, target) {
+function getShotAngle(bullet, target) {
   let unitary = createVector(cos(bullet.angle), sin(bullet.angle));
   let b = createVector(target.position.x - bullet.position.x, target.position.y - bullet.position.y);
   let angle = angleOfVectors(unitary, b);
+  return angle;
+}
+
+function getAngleFitness(angle) {
   return maxAimScore * exp(-(angle) / 5);
 }
 

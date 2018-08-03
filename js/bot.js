@@ -12,6 +12,7 @@ class Bot {
     this.alive = true;
     this.score = 1;
     this.fitness = 0;
+    this.frameShotted = -Infinity;
 
     if (brain instanceof NeuralNetwork) {
       this.brain = brain.copy();
@@ -44,32 +45,53 @@ class Bot {
     }
 
     let outputs = this.brain.predict(inputs);
-    // Sort to see which output is the highest.
+    if (showBest.checked()) {
+      console.log(outputs)
+    }
 
-    if (outputs[0] > 0.5) this.forward();
-    if (outputs[1] > 0.5) {
+    if (outputs[0] > 0.5 || outputs[1] > 0.5) {
+      if (outputs[0] > 0.5) {
+        this.forward(1.5 * outputs[0]);
+      } else if (outputs[1] > 0.5) {
+        this.backwards(1.5 * outputs[1]);
+      }
+    }
+    else {
+      this.forward(3 * (outputs[0] - outputs[1]));
+    }
+
+    // Shoot output
+    if (outputs[2] > 0.7) {
       shotBullet = this.shoot();
     }
-    let temporal = sortOutputs(outputs.slice(2, 5)); // 2, 3
-    switch (temporal[0].index) {
-      case 0:
-        this.rotate(angleFactor * temporal[0].value);
-        break;
-      case 1:
-        this.rotate(-angleFactor * temporal[0].value);
-        break;
-      default:
-        break;
+
+    // Rotate outputs
+    if (outputs[3] > 0.5 || outputs[4] > 0.5) {
+      if (outputs[3] > 0.5) {
+        this.rotate(angleFactor * outputs[3]);
+      } else if (outputs[4] > 0.5) {
+        this.rotate(- angleFactor * outputs[4]);
+      }
+    }
+    else {
+      this.rotate(1.5 * angleFactor * (outputs[3] - outputs[4]));
     }
 
     return shotBullet;
   }
 
-  forward() {
-    this.position.x += this.speed * cos(this.angle);
-    this.position.y += this.speed * sin(this.angle);
-    this.centerPosition.x += this.speed * cos(this.angle);
-    this.centerPosition.y += this.speed * sin(this.angle);
+  forward(speedMultiplier = 1) {
+    this.position.x += speedMultiplier * this.speed * cos(this.angle);
+    this.position.y += speedMultiplier * this.speed * sin(this.angle);
+    this.centerPosition.x += speedMultiplier * this.speed * cos(this.angle);
+    this.centerPosition.y += speedMultiplier * this.speed * sin(this.angle);
+  }
+
+  backwards(speedMultiplier = 1) {
+    this.position.x -= speedMultiplier * this.speed * cos(this.angle);
+    this.position.y -= speedMultiplier * this.speed * sin(this.angle);
+    this.centerPosition.x -= speedMultiplier * this.speed * cos(this.angle);
+    this.centerPosition.y -= speedMultiplier * this.speed * sin(this.angle);
   }
 
   showAim(color) {
@@ -82,9 +104,8 @@ class Bot {
   }
 
   shoot() {
-    if (!this.shot) {
-      //this.shot = true;
-      //bullets.push(new Bullet(this.position.x, this.position.y, this.angle));
+    if (!this.shot && frameCounter - this.frameShotted >= framesToShoot) {
+      this.frameShotted = frameCounter;
       return new Bullet(this.position.x, this.position.y, this.angle);
     }
   }
@@ -156,8 +177,13 @@ function botsAct(blueBots, redBots, blueBullets, redBullets, i) {
     bullet = blueBots[i].act(aimBullet, aimTarget);
 
     if (!blueBots[i].shot && bullet !== undefined) {
-      blueBots[i].score += getAngleFitness(blueBots[i], redBots[i]);
+      let bulletAngle = getShotAngle(blueBots[i], redBots[i]);
+
       blueBots[i].shot = true;
+      if (bulletAngle < hitAngleRange) {
+        bullet.gonnaHit = true;
+        blueBots[i].score += getAngleFitness(bulletAngle);
+      }
       blueBullets[i] = bullet;
     }
 
@@ -165,6 +191,8 @@ function botsAct(blueBots, redBots, blueBullets, redBullets, i) {
       blueBots[i].reduceScore(offScreenScore);
       blueBots[i].alive = false;
     }
+
+
     // Red Bot.
     aimBullet = undefined;
     aimTarget = undefined;
@@ -183,26 +211,18 @@ function botsAct(blueBots, redBots, blueBullets, redBullets, i) {
     bullet = redBots[i].act(aimBullet, aimTarget);
 
     if (!redBots[i].shot && bullet !== undefined) {
-      redBots[i].score += getAngleFitness(redBots[i], blueBots[i]);
+      let bulletAngle = getShotAngle(redBots[i], blueBots[i]);
       redBots[i].shot = true;
+      if (bulletAngle < hitAngleRange) {
+        bullet.gonnaHit = true;
+        redBots[i].score += getAngleFitness(bulletAngle);
+      }
       redBullets[i] = bullet;
     }
 
     if (redBots[i].offScreen()) {
       redBots[i].reduceScore(offScreenScore);
       redBots[i].alive = false;
-    }
-
-    // Both Bots.
-
-    let distance = calculateSquareDistance(blueBots[i].position, redBots[i].position);
-    if (distance > minDistanceAllowed && distance < maxDistanceAllowed) {
-      blueBots[i].score += scoreWhileDistanced;
-      redBots[i].score += scoreWhileDistanced;
-    }
-    else {
-      blueBots[i].reduceScore(scoreWhileDistanced);
-      redBots[i].reduceScore(scoreWhileDistanced);
     }
   }
 }

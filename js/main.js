@@ -12,14 +12,14 @@ const blueBotY = 300;
 const redBotX = 600;
 const redBotY = 300;
 
-const botWidth = 50;
-const botHeight = 25;
-const botSpeed = 2.5;
-const bulletWidth = 20;
-const bulletHeight = 6;
-const bulletSpeed = 8;
-const aimAngle = 27;
-const aimRadius = 600;
+const botWidth = 35;
+const botHeight = 14;
+const botSpeed = 1.5;
+const bulletWidth = 12;
+const bulletHeight = 4;
+const bulletSpeed = 6;
+const aimAngle = 30;
+const aimRadius = 1000;
 
 const red = [255, 0, 0, 100];
 const blue = [0, 0, 255, 100];
@@ -28,7 +28,7 @@ const blue = [0, 0, 255, 100];
 const inputNodes = 7;
 const hiddenNodes = 6;
 const outputNodes = 5;
-const angleFactor = 8;
+const angleFactor = 14;
 
 // Genetic Algorithms
 let blueBots = new Array();
@@ -36,9 +36,12 @@ let redBots = new Array();
 let bestBlueBot = new Array();
 let bestRedBot = new Array();
 
-const mutationRate = 0.08;
+const mutationRate = 0.05;
+
 let frameCounter = 0;
-let framesPerGeneration = 700;
+let framesPerGeneration = 500;
+const framesToShoot = 50;
+
 let deadBots = 0;
 let generation = 0;
 let highestScore = 0;
@@ -49,15 +52,16 @@ let redBullets = new Array();
 let bestBlueBullets = new Array();
 let bestRedBullets = new Array();
 
-const totalPopulation = 150;
-const maxAimScore = 8000; // Add score when the bot aimed correctly.
-const maxSubstractHitScore = 12000; // Substract score when a bullet hits the current bot.
-const scoreWhileAiming = 20; // Suma cuando el bot enemigo esta en la mira.
-const scoreWhileDistanced = 0;
-const offScreenScore = 5000;
+const totalPopulation = 100;
+const maxAimScore = 2; // Score to add when the bot aimed correctly.
+const maxAddHitScore = 1; // Score to add when the bot hit the target.
+const maxSubstractHitScore = 5; // Score to substract when a bullet hits the bot.
+const maxAddDodgeScore = 10; // Score to add when the bot dodges a bullet (this condition is defined when the enemy bot shoots).
 
-const minDistanceAllowed = 50000;
-const maxDistanceAllowed = 320000;
+const hitAngleRange = 8;
+
+const scoreWhileAiming = 0.075; // Score to add when the enemy bot is on bot's aim.
+const offScreenScore = 5000;
 
 
 // DOM variables.
@@ -72,7 +76,7 @@ let showBest;
 let saveButton;
 
 function setup() {
-  frameRate(60);
+  frameRate(500);
   pixelDensity(1);
   angleMode(DEGREES);
 
@@ -87,7 +91,7 @@ function setup() {
 
 function draw() {
   if (!showBest.checked()) {
-    for (let i = 0; i < slider.value(); i++) {
+    for (let i = 0; i < 100; i++) {
       if (frameCounter++ != framesPerGeneration && !(deadBots >= totalPopulation)) {
         for (let i = 0; i < totalPopulation; i++) {
           bulletMovement(blueBullets, blueBots, redBots, i, true);
@@ -114,5 +118,6 @@ function draw() {
     // Visuals.
     background(220);
     showBots(bestBlueBot, bestRedBot, bestBlueBullets, bestRedBullets);
+    frameCounter++;
   }
 }
