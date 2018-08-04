@@ -10,7 +10,7 @@ class Bot {
     this.aimAngle = aimAngle;
     this.shot = false;
     this.alive = true;
-    this.score = 1;
+    this.score = 10;
     this.fitness = 0;
     this.frameShotted = -Infinity;
 
@@ -49,32 +49,34 @@ class Bot {
       console.log(outputs)
     }
 
-    if (outputs[0] > 0.5 || outputs[1] > 0.5) {
-      if (outputs[0] > 0.5) {
-        this.forward(1.5 * outputs[0]);
-      } else if (outputs[1] > 0.5) {
-        this.backwards(1.5 * outputs[1]);
-      }
-    }
-    else {
-      this.forward(3 * (outputs[0] - outputs[1]));
+    let temporal = sortOutputs(outputs.slice(2)); // 2, 3
+    switch (temporal[0].index) {
+      case 0:
+        this.forward(temporal[0].value);
+        break;
+      case 1:
+        this.backwards(temporal[0].value);
+        break;
+      default:
+        break;
     }
 
     // Shoot output
-    if (outputs[2] > 0.7) {
+    if (outputs[2] >= 0.75) {
       shotBullet = this.shoot();
     }
 
     // Rotate outputs
-    if (outputs[3] > 0.5 || outputs[4] > 0.5) {
-      if (outputs[3] > 0.5) {
-        this.rotate(angleFactor * outputs[3]);
-      } else if (outputs[4] > 0.5) {
-        this.rotate(- angleFactor * outputs[4]);
-      }
-    }
-    else {
-      this.rotate(1.5 * angleFactor * (outputs[3] - outputs[4]));
+    temporal = sortOutputs(outputs.slice(3, 5));
+    switch (temporal[0].index) {
+      case 0:
+        this.rotate(angleFactor * temporal[0].value);
+        break;
+      case 1:
+        this.rotate(-angleFactor * temporal[0].value);
+        break;
+      default:
+        break;
     }
 
     return shotBullet;
@@ -184,6 +186,9 @@ function botsAct(blueBots, redBots, blueBullets, redBullets, i) {
         bullet.gonnaHit = true;
         blueBots[i].score += getAngleFitness(bulletAngle);
       }
+      else {
+        blueBots[i].reduceScore(missingShotScore)
+      }
       blueBullets[i] = bullet;
     }
 
@@ -216,6 +221,9 @@ function botsAct(blueBots, redBots, blueBullets, redBullets, i) {
       if (bulletAngle < hitAngleRange) {
         bullet.gonnaHit = true;
         redBots[i].score += getAngleFitness(bulletAngle);
+      }
+      else {
+        redBots[i].reduceScore(missingShotScore)
       }
       redBullets[i] = bullet;
     }

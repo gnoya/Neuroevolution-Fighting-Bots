@@ -18,7 +18,7 @@ const botSpeed = 1.5;
 const bulletWidth = 12;
 const bulletHeight = 4;
 const bulletSpeed = 6;
-const aimAngle = 30;
+const aimAngle = 40;
 const aimRadius = 1000;
 
 const red = [255, 0, 0, 100];
@@ -28,7 +28,7 @@ const blue = [0, 0, 255, 100];
 const inputNodes = 7;
 const hiddenNodes = 6;
 const outputNodes = 5;
-const angleFactor = 14;
+const angleFactor = 10;
 
 // Genetic Algorithms
 let blueBots = new Array();
@@ -36,11 +36,11 @@ let redBots = new Array();
 let bestBlueBot = new Array();
 let bestRedBot = new Array();
 
-const mutationRate = 0.05;
+const mutationRate = 0.1;
 
 let frameCounter = 0;
-let framesPerGeneration = 500;
-const framesToShoot = 50;
+let framesPerGeneration = 650;
+const framesToShoot = 30;
 
 let deadBots = 0;
 let generation = 0;
@@ -52,15 +52,15 @@ let redBullets = new Array();
 let bestBlueBullets = new Array();
 let bestRedBullets = new Array();
 
-const totalPopulation = 100;
-const maxAimScore = 2; // Score to add when the bot aimed correctly.
-const maxAddHitScore = 1; // Score to add when the bot hit the target.
-const maxSubstractHitScore = 5; // Score to substract when a bullet hits the bot.
-const maxAddDodgeScore = 10; // Score to add when the bot dodges a bullet (this condition is defined when the enemy bot shoots).
+const totalPopulation = 150;
+const maxAimScore = 1; // Score to add when the bot aimed correctly.
+const maxAddHitScore = 2; // Score to add when the bot hit the target.
+const maxSubstractHitScore = 2; // Score to substract when a bullet hits the bot.
+const maxAddDodgeScore = 2; // Score to add when the bot dodges a bullet (this condition is defined when the enemy bot shoots).
+const missingShotScore = 1; // Score to substact when the aim angle is greater than hitAngleRange.
+const hitAngleRange = 10;
 
-const hitAngleRange = 8;
-
-const scoreWhileAiming = 0.075; // Score to add when the enemy bot is on bot's aim.
+const scoreWhileAiming = 0.0075; // Score to add when the enemy bot is on bot's aim.
 const offScreenScore = 5000;
 
 
