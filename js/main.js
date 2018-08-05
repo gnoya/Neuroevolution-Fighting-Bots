@@ -49,10 +49,7 @@ const maxAimScore = 8; // Score to add when the bot aimed correctly.
 const maxAddHitScore = 2; // Score to add when the bot hit the target.
 const maxSubstractHitScore = 7; // Score to substract when a bullet hits the bot.
 const maxAddDodgeScore = 10; // Score to add when the bot dodges a bullet (this condition is defined when the enemy bot shoots).
-// const missingShotScore = 0.1; // Score to substact when the aim angle is greater than hitAngleRange.
 const hitAngleRange = 5;
-const fitnessAngleCut = 55;
-
 const scoreWhileAiming = 0.02; // Score to add when the enemy bot is on bot's aim.
 const offScreenScore = 5000;
 
@@ -60,6 +57,7 @@ const offScreenScore = 5000;
 // DOM variables.
 let canvas;
 let slider;
+let speed;
 let generationText;
 let currentScoreText;
 let averageScoreText;
@@ -83,8 +81,9 @@ function setup() {
 }
 
 function draw() {
+  speedText.html(slider.value());
   if (!showBest.checked()) {
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < slider.value(); i++) {
       if (frameCounter++ != framesPerGeneration && !(deadBots >= totalPopulation)) {
         for (let i = 0; i < totalPopulation; i++) {
           bulletMovement(blueBullets, blueBots, redBots, i, true);

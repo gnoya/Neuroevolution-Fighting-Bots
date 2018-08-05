@@ -38,8 +38,6 @@ class Bullet {
     rotate(this.angle);
     rectMode(CENTER);
     rect(0, 0, this.width, this.height);
-    //imageMode(CENTER);
-    //image(this.image, 0, 0);
     pop();
   }
 }
@@ -51,12 +49,6 @@ function bulletMovement(bullets, friendlyBots, enemyBots, i, death) {
       bullets[i].hit = true;
       friendlyBots[i].score += maxAddHitScore;
       enemyBots[i].reduceScore(maxSubstractHitScore);
-      /*
-      if (enemyBots[i].alive && friendlyBots[i].alive) {
-        enemyBots[i].alive = false;
-        deadBots++;
-      }
-      */
     }
     if (bullets[i].offscreen() || bullets[i].hit) {
       if (bullets[i].gonnaHit && bullets[i].offscreen()) {

@@ -9,7 +9,6 @@ function sortOutputs(outputs) {
   result.sort(function (a, b) {
     return ((a.value < b.value) ? 1 : ((a.value == b.value) ? 0 : -1));
   });
-  // return result.map(a => a.index);
   return result;
 }
 
@@ -26,13 +25,7 @@ function getShotAngle(bullet, target) {
 }
 
 function getAngleFitness(angle) {
-  if (angle <= fitnessAngleCut) {
-    return - maxAimScore / fitnessAngleCut * (angle - fitnessAngleCut);
-  }
-  else {
-    return - maxAimScore / (180 - fitnessAngleCut) * (angle - fitnessAngleCut)
-  }
-
+  return - maxAimScore / 180 * (angle - 180);
 }
 
 function restartGame() {

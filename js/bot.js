@@ -179,15 +179,6 @@ function botsAct(blueBots, redBots, blueBullets, redBullets, i) {
       let bulletAngle = getShotAngle(blueBots[i], redBots[i]);
 
       blueBots[i].shot = true;
-      /*
-      if (bulletAngle < hitAngleRange) {
-        bullet.gonnaHit = true;
-        blueBots[i].score += getAngleFitness(bulletAngle);
-      }
-      else {
-        blueBots[i].reduceScore(missingShotScore)
-      }
-      */
       if (bulletAngle < hitAngleRange) {
         bullet.gonnaHit = true;
       }
@@ -221,13 +212,6 @@ function botsAct(blueBots, redBots, blueBullets, redBullets, i) {
     if (!redBots[i].shot && bullet !== undefined) {
       let bulletAngle = getShotAngle(redBots[i], blueBots[i]);
       redBots[i].shot = true;
-      // if (bulletAngle < hitAngleRange) {
-      //   bullet.gonnaHit = true;
-      //   redBots[i].score += getAngleFitness(bulletAngle);
-      // }
-      // else {
-      //   redBots[i].reduceScore(missingShotScore)
-      // }
       if (bulletAngle < hitAngleRange) {
         bullet.gonnaHit = true;
       }
