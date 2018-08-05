@@ -12,7 +12,7 @@ Ambos vehículos tienen la capacidad de girar hacia ambos lados, avanzar, retroc
 El modelo utilizado es una red neuronal completamente conectada (figura 1). Esta constituida por siete entradas, seis nodos intermedios y cinco salidas. Cada uno de estos parámetros es explicado a continuación.
 
 <p align="center">
-  <img src="https://github.com/gnoya/Neuroevolution-Fighting-Bots/blob/master/results/redNeuronal.png" width="500">
+  <img src="https://github.com/gnoya/Neuroevolution-Fighting-Bots/blob/master/results/redNeuronal.png" width="700">
   </br>
   Figura 1: Modelo de la red neuronal.
 </p>
@@ -22,10 +22,10 @@ El modelo utilizado es una red neuronal completamente conectada (figura 1). Esta
   |     X1     | Propio X       |
   |     X2     | Propio Y       |
   |     X3     | Propio ángulo  |
-  |     X4     | Enemigo X      |
-  |     X5     | Enemigo Y      |
-  |     X6     | Bala enemiga X |
-  |     X7     | Bala enemiga Y |
+  |     X4     | Bala enemiga X |
+  |     X5     | Bala enemiga Y |
+  |     X6     | Enemigo X      |
+  |     X7     | Enemigo Y      |
 
   |   Salida   |      Acción      |
   | ---------- | ----------------:|
@@ -35,7 +35,9 @@ El modelo utilizado es una red neuronal completamente conectada (figura 1). Esta
   |     Y4     |  Girar izquierda |
   |     Y5     |  Girar derecha   |
 
-De no ser detectado ningún robot ni bala enemiga, las entradas X4, X5, X6 y X7 son colocadas en 0.
+De no ser detectado ninguna bala enemiga, las entradas X4 y X5 son colocadas en 0.
+De no ser detectado ningún robot enemigo, las entradas X6 y X7 son colocadas en 0.
+
 
 ### Initialization
 El peso entre cada neurona es inicializado de manera aleatorio entre -1 y 1.
@@ -61,7 +63,7 @@ Se utilizó una selección por ruleta de la fortuna en base a las puntuaciones p
 El cruce de genes implementado en este proyecto se basa en el cruce de pesos de cada red neuronal. Es decir, se recorre la matríz de pesos vacía del nuevo individuo y se va llenando con el peso en la correspondiente posición de la matríz de pesos de los padres. Para elegir de qué padre se tomará ese peso, se elige un numero aleatorio, si es menor a 0.5 se elige al padre A, si no, se elige al padre B. Este procedimiento se ilustra en la figura 3.
 
 <p align="center">
-  <img src="https://github.com/gnoya/Neuroevolution-Dodging-Game/blob/master/results/crossover.png" width="500">
+  <img src="https://github.com/gnoya/Neuroevolution-Fighting-Bots/blob/master/results/crossover.png" width="500">
   </br>
   Figura 3: Cruce de genes.
 </p>
