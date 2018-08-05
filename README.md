@@ -1,4 +1,4 @@
-# Neuroevolution-Fighting-Bots
+# Neuroevolution Fighting Bots
 Simulación de pelea de vehículos utilizando redes neuronales y algoritmos geneticos.
 
 ## Objectivos
@@ -39,10 +39,10 @@ De no ser detectado ninguna bala enemiga, las entradas X4 y X5 son colocadas en 
 De no ser detectado ningún robot enemigo, las entradas X6 y X7 son colocadas en 0.
 
 
-### Initialization
+### Inicialización de la red neuronal
 El peso entre cada neurona es inicializado de manera aleatorio entre -1 y 1.
 
-## Genetic Algorithms
+## Algoritmos genéticos
 Se implementó un algoritmo genético con una población de 150 individuos y un índice de mutación de 7.5 %. Cada individuo es un par de vehículos, uno azul y uno rojo. Cada vehículo solo interactúa con su pareja y no con los demás. Luego, se juntan todos los vehículos azules y se les aplica algoritmos genéticos. Este procedimiento también se realiza en los vehículos rojos. La puntuación dependerá de su habilidad de esquivar y su puntería al disparar.
 
 ### Fitness
@@ -56,7 +56,7 @@ Cada vez que el vehículo dispara, se crea un vector unitario desde el centro de
 
 Para evaluar la capacidad de esquivar, se evalúa si el disparo fue lo suficientemente bueno. En caso de ser menor a cierto ángulo, se considerará que el disparo acertará. De cumplirse este caso y que la bala no golpee al vehículo, se considerará como una evasión y se sumará puntuación al vehículo que esquivó. En cualquier caso, si el vehículo es impactado por una bala enemiga, se reducirá su puntuación.
 
-### Natural Selection
+### Selección natural
 Se utilizó una selección por ruleta de la fortuna en base a las puntuaciones previamente explicadas. Se elegieron dos padres de un mismo color (azul o rojo) para dar origen a un nuevo individuo de su mismo color.
 
 ### Crossover
@@ -72,7 +72,7 @@ El cruce de genes implementado en este proyecto se basa en el cruce de pesos de 
 La mutación consiste en alterar en una pequeña magnitud uno de los pesos entre neuronas. Se recorrerá la matríz de pesos de cada nuevo individuo, y para cada peso se generará un número aleatorio. Si ese número es menor al índice de mutación (0.075), el peso se modifica ligeramente.
 
 ## Resultados
-Se obtuvieron resultados con menor eficiencia de lo esperado. Se puede notar que los vehículos solo aprenden a realizar una acción, disparar o esquivar. Este resultado será explicado de mejor manera en las conclusiones. En las siguientes figuras se pueden observar algunos resultados obtenidos.
+Se obtuvieron resultados con menor eficiencia de lo esperado. Se puede notar que los vehículos solo aprenden a realizar una acción, disparar o esquivar. Este resultado será explicado de mejor manera en las conclusiones. En las siguientes figuras se pueden observar algunos resultados obtenidos. 
 
 <p align="center">
   <img src="https://github.com/gnoya/Neuroevolution-Fighting-Bots/blob/master/results/NeuroBots.gif">
@@ -80,11 +80,15 @@ Se obtuvieron resultados con menor eficiencia de lo esperado. Se puede notar que
   Figura 4: Resultados parte 1.
 </p>
 
+Véase que en la figura 4, el vehículo azul dispara y esquiva de manera correcta, sin embargo, el rojo no aprendió a esquivar, solo a disparar.
+
 <p align="center">
   <img src="https://github.com/gnoya/Neuroevolution-Fighting-Bots/blob/master/results/NeuroBots2.gif">
   </br>
   Figura 5: Resultados parte 2.
 </p>
+
+En la figura 5, el vehículo azul se detiene cuando esta por impactar con una bala enemiga, pero su precisión de tiro es mediocre. En cambio, el vehículo rojo dispara de manera correcta pero no aprendió a esquivar.
 
 
 ## Conclusiones
