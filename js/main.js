@@ -1,11 +1,3 @@
-/*
-Probar scores +1 y -1 solo con hits y esquivadas
-Precision de tiro y disparo. Revisar distancia con linea perpendicular al angulo de disparo.
-Evitar sumar score a esquviadas de disparo muy lejanas.
-Agregar puntuacion por estar en la mira: cantidad de frames en mira / frames totales.
-*/
-
-
 // Gameplay
 const blueBotX = 200;
 const blueBotY = 300;
@@ -36,11 +28,11 @@ let redBots = new Array();
 let bestBlueBot = new Array();
 let bestRedBot = new Array();
 
-const mutationRate = 0.1;
+const mutationRate = 0.075;
 
 let frameCounter = 0;
 let framesPerGeneration = 650;
-const framesToShoot = 30;
+const framesToShoot = 50;
 
 let deadBots = 0;
 let generation = 0;
@@ -53,14 +45,15 @@ let bestBlueBullets = new Array();
 let bestRedBullets = new Array();
 
 const totalPopulation = 150;
-const maxAimScore = 1; // Score to add when the bot aimed correctly.
+const maxAimScore = 8; // Score to add when the bot aimed correctly.
 const maxAddHitScore = 2; // Score to add when the bot hit the target.
-const maxSubstractHitScore = 2; // Score to substract when a bullet hits the bot.
-const maxAddDodgeScore = 2; // Score to add when the bot dodges a bullet (this condition is defined when the enemy bot shoots).
-const missingShotScore = 1; // Score to substact when the aim angle is greater than hitAngleRange.
-const hitAngleRange = 10;
+const maxSubstractHitScore = 7; // Score to substract when a bullet hits the bot.
+const maxAddDodgeScore = 10; // Score to add when the bot dodges a bullet (this condition is defined when the enemy bot shoots).
+// const missingShotScore = 0.1; // Score to substact when the aim angle is greater than hitAngleRange.
+const hitAngleRange = 5;
+const fitnessAngleCut = 55;
 
-const scoreWhileAiming = 0.0075; // Score to add when the enemy bot is on bot's aim.
+const scoreWhileAiming = 0.02; // Score to add when the enemy bot is on bot's aim.
 const offScreenScore = 5000;
 
 

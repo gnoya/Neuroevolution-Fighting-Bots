@@ -1,9 +1,15 @@
 function nextGeneration(bots1, bots2) {
-  let players = bots1.concat(bots2);
+  let players = bots1;
   calculateFitness(players);
   players = naturalSelection(players);
-  blueBots = players.slice(0, totalPopulation);
-  redBots = players.slice(totalPopulation, players.length);
+  blueBots = players;
+
+  players = bots2;
+  calculateFitness(players);
+  players = naturalSelection(players);
+
+  redBots = players;
+
   for (let i = 0; i < totalPopulation; i++) {
     blueBots[i].position.x = blueBotX;
     blueBots[i].position.y = blueBotY;
@@ -65,12 +71,10 @@ function crossover(parentA, parentB) {
   let brainA = parentA.brain.copy();
   let brainB = parentB.brain.copy();
 
-
   // We take weights from both parents and crossover them in child's brain.
   // brainA.weights_ho = brainB.weights_ho.copy();
   // brainA.bias_o = brainB.bias_o.copy();
-  // // Returning child.
-  // return new Bot(0, 0, brainA);
+  // return new Bot(0, 0, brainA.copy());
   return new Bot(0, 0, NeuralNetwork.crossover(brainA, brainB, 0.5));
 }
 

@@ -45,11 +45,8 @@ class Bot {
     }
 
     let outputs = this.brain.predict(inputs);
-    if (showBest.checked()) {
-      console.log(outputs)
-    }
 
-    let temporal = sortOutputs(outputs.slice(2)); // 2, 3
+    let temporal = sortOutputs(outputs.slice(2));
     switch (temporal[0].index) {
       case 0:
         this.forward(temporal[0].value);
@@ -62,7 +59,7 @@ class Bot {
     }
 
     // Shoot output
-    if (outputs[2] >= 0.75) {
+    if (outputs[2] >= 0.7) {
       shotBullet = this.shoot();
     }
 
@@ -182,6 +179,7 @@ function botsAct(blueBots, redBots, blueBullets, redBullets, i) {
       let bulletAngle = getShotAngle(blueBots[i], redBots[i]);
 
       blueBots[i].shot = true;
+      /*
       if (bulletAngle < hitAngleRange) {
         bullet.gonnaHit = true;
         blueBots[i].score += getAngleFitness(bulletAngle);
@@ -189,6 +187,11 @@ function botsAct(blueBots, redBots, blueBullets, redBullets, i) {
       else {
         blueBots[i].reduceScore(missingShotScore)
       }
+      */
+      if (bulletAngle < hitAngleRange) {
+        bullet.gonnaHit = true;
+      }
+      blueBots[i].score += getAngleFitness(bulletAngle);
       blueBullets[i] = bullet;
     }
 
@@ -218,13 +221,17 @@ function botsAct(blueBots, redBots, blueBullets, redBullets, i) {
     if (!redBots[i].shot && bullet !== undefined) {
       let bulletAngle = getShotAngle(redBots[i], blueBots[i]);
       redBots[i].shot = true;
+      // if (bulletAngle < hitAngleRange) {
+      //   bullet.gonnaHit = true;
+      //   redBots[i].score += getAngleFitness(bulletAngle);
+      // }
+      // else {
+      //   redBots[i].reduceScore(missingShotScore)
+      // }
       if (bulletAngle < hitAngleRange) {
         bullet.gonnaHit = true;
-        redBots[i].score += getAngleFitness(bulletAngle);
       }
-      else {
-        redBots[i].reduceScore(missingShotScore)
-      }
+      redBots[i].score += getAngleFitness(bulletAngle);
       redBullets[i] = bullet;
     }
 

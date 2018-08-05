@@ -26,7 +26,13 @@ function getShotAngle(bullet, target) {
 }
 
 function getAngleFitness(angle) {
-  return maxAimScore * exp(-(angle) / 5);
+  if (angle <= fitnessAngleCut) {
+    return - maxAimScore / fitnessAngleCut * (angle - fitnessAngleCut);
+  }
+  else {
+    return - maxAimScore / (180 - fitnessAngleCut) * (angle - fitnessAngleCut)
+  }
+
 }
 
 function restartGame() {
