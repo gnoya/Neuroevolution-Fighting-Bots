@@ -169,6 +169,12 @@ class NeuralNetwork {
     this.bias_o.map(func);
   }
 
-
-
+  static crossover(a, b, ratio = 0.5) {
+    let nn = a.copy();
+    nn.weights_ih = Matrix.crossover(a.weights_ih, b.weights_ih, ratio);
+    nn.weights_ho = Matrix.crossover(a.weights_ho, b.weights_ho, ratio);
+    nn.bias_h = Matrix.crossover(a.bias_h, b.bias_h, ratio);
+    nn.bias_o = Matrix.crossover(a.bias_o, b.bias_o, ratio);
+    return nn;
+  }
 }

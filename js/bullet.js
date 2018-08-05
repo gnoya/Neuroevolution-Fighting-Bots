@@ -6,6 +6,7 @@ class Bullet {
     this.height = bulletHeight;
     this.speed = bulletSpeed;
     this.hit = false;
+    this.gonnaHit = false;
     this.centerPosition = createVector(this.position.x + this.width / 2, this.position.y + this.height / 2);
   }
 
@@ -43,14 +44,24 @@ class Bullet {
   }
 }
 
-function bulletMovement(bullets, friendlyBots, enemyBots, i) {
+function bulletMovement(bullets, friendlyBots, enemyBots, i, death) {
   if (bullets[i] !== undefined) {
     bullets[i].move();
     if (!bullets[i].hit && bullets[i].crashed(enemyBots[i])) {
       bullets[i].hit = true;
-      enemyBots[i].reduceScore(maxHitScore);
+      friendlyBots[i].score += maxAddHitScore;
+      enemyBots[i].reduceScore(maxSubstractHitScore);
+      /*
+      if (enemyBots[i].alive && friendlyBots[i].alive) {
+        enemyBots[i].alive = false;
+        deadBots++;
+      }
+      */
     }
-    if (bullets[i].offscreen()) {
+    if (bullets[i].offscreen() || bullets[i].hit) {
+      if (bullets[i].gonnaHit && bullets[i].offscreen()) {
+        friendlyBots[i].score += maxAddDodgeScore;
+      }
       bullets[i] = undefined;
       friendlyBots[i].shot = false;
     }

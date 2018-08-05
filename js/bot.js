@@ -10,8 +10,9 @@ class Bot {
     this.aimAngle = aimAngle;
     this.shot = false;
     this.alive = true;
-    this.score = 1;
+    this.score = 10;
     this.fitness = 0;
+    this.frameShotted = -Infinity;
 
     if (brain instanceof NeuralNetwork) {
       this.brain = brain.copy();
@@ -44,14 +45,26 @@ class Bot {
     }
 
     let outputs = this.brain.predict(inputs);
-    // Sort to see which output is the highest.
-    //outputs = sortOutputs(outputs);
-    if (outputs[0] > 0.5) this.forward();
-    if (outputs[1] > 0.5) {
-      shotBullet = this.shoot();
-      //console.log(shotBullet)
+
+    let temporal = sortOutputs(outputs.slice(2));
+    switch (temporal[0].index) {
+      case 0:
+        this.forward(temporal[0].value);
+        break;
+      case 1:
+        this.backwards(temporal[0].value);
+        break;
+      default:
+        break;
     }
-    let temporal = sortOutputs(outputs.slice(2, 5)); // 2, 3, 4
+
+    // Shoot output
+    if (outputs[2] >= 0.7) {
+      shotBullet = this.shoot();
+    }
+
+    // Rotate outputs
+    temporal = sortOutputs(outputs.slice(3, 5));
     switch (temporal[0].index) {
       case 0:
         this.rotate(angleFactor * temporal[0].value);
@@ -66,11 +79,18 @@ class Bot {
     return shotBullet;
   }
 
-  forward() {
-    this.position.x += this.speed * cos(this.angle);
-    this.position.y += this.speed * sin(this.angle);
-    this.centerPosition.x += this.speed * cos(this.angle);
-    this.centerPosition.y += this.speed * sin(this.angle);
+  forward(speedMultiplier = 1) {
+    this.position.x += speedMultiplier * this.speed * cos(this.angle);
+    this.position.y += speedMultiplier * this.speed * sin(this.angle);
+    this.centerPosition.x += speedMultiplier * this.speed * cos(this.angle);
+    this.centerPosition.y += speedMultiplier * this.speed * sin(this.angle);
+  }
+
+  backwards(speedMultiplier = 1) {
+    this.position.x -= speedMultiplier * this.speed * cos(this.angle);
+    this.position.y -= speedMultiplier * this.speed * sin(this.angle);
+    this.centerPosition.x -= speedMultiplier * this.speed * cos(this.angle);
+    this.centerPosition.y -= speedMultiplier * this.speed * sin(this.angle);
   }
 
   showAim(color) {
@@ -83,9 +103,8 @@ class Bot {
   }
 
   shoot() {
-    if (!this.shot) {
-      //this.shot = true;
-      //bullets.push(new Bullet(this.position.x, this.position.y, this.angle));
+    if (!this.shot && frameCounter - this.frameShotted >= framesToShoot) {
+      this.frameShotted = frameCounter;
       return new Bullet(this.position.x, this.position.y, this.angle);
     }
   }
@@ -117,6 +136,13 @@ class Bot {
     if (this.angle < 0) this.angle += 360;
   }
 
+  offScreen() {
+    if (this.position.x + this.width / 2 < 0 || this.position.x - this.width / 2 > width || this.position.y + this.height / 2 > height || this.position.y + this.height / 2 < 0) {
+      return true;
+    }
+    return false;
+  }
+
   show(color) {
     push();
     stroke(0);
@@ -125,15 +151,13 @@ class Bot {
     rotate(this.angle);
     rectMode(CENTER);
     rect(0, 0, this.width, this.height);
-    //imageMode(CENTER);
-    //image(this.image, 0, 0);
     pop();
   }
 }
 
 function botsAct(blueBots, redBots, blueBullets, redBullets, i) {
   let bullet = undefined;
-  if (blueBots[i].alive) {
+  if (blueBots[i].alive && redBots[i].alive) {
     // Blue Bot.
     let aimBullet = undefined;
     let aimTarget = undefined;
@@ -145,16 +169,37 @@ function botsAct(blueBots, redBots, blueBullets, redBullets, i) {
 
     // Check if an enemy bot is in the aim.
     if (blueBots[i].checkAim(redBots[i])) {
+      blueBots[i].score += scoreWhileAiming;
       aimTarget = redBots[i];
     }
 
     bullet = blueBots[i].act(aimBullet, aimTarget);
 
     if (!blueBots[i].shot && bullet !== undefined) {
-      blueBots[i].score += getAngleFitness(blueBots[i], redBots[i]);
+      let bulletAngle = getShotAngle(blueBots[i], redBots[i]);
+
       blueBots[i].shot = true;
+      /*
+      if (bulletAngle < hitAngleRange) {
+        bullet.gonnaHit = true;
+        blueBots[i].score += getAngleFitness(bulletAngle);
+      }
+      else {
+        blueBots[i].reduceScore(missingShotScore)
+      }
+      */
+      if (bulletAngle < hitAngleRange) {
+        bullet.gonnaHit = true;
+      }
+      blueBots[i].score += getAngleFitness(bulletAngle);
       blueBullets[i] = bullet;
     }
+
+    if (blueBots[i].offScreen()) {
+      blueBots[i].reduceScore(offScreenScore);
+      blueBots[i].alive = false;
+    }
+
 
     // Red Bot.
     aimBullet = undefined;
@@ -167,21 +212,38 @@ function botsAct(blueBots, redBots, blueBullets, redBullets, i) {
 
     // Check if an enemy bot is in the aim.
     if (redBots[i].checkAim(blueBots[i])) {
+      redBots[i].score += scoreWhileAiming;
       aimTarget = blueBots[i];
     }
 
     bullet = redBots[i].act(aimBullet, aimTarget);
 
     if (!redBots[i].shot && bullet !== undefined) {
-      redBots[i].score += getAngleFitness(redBots[i], blueBots[i]);
+      let bulletAngle = getShotAngle(redBots[i], blueBots[i]);
       redBots[i].shot = true;
+      // if (bulletAngle < hitAngleRange) {
+      //   bullet.gonnaHit = true;
+      //   redBots[i].score += getAngleFitness(bulletAngle);
+      // }
+      // else {
+      //   redBots[i].reduceScore(missingShotScore)
+      // }
+      if (bulletAngle < hitAngleRange) {
+        bullet.gonnaHit = true;
+      }
+      redBots[i].score += getAngleFitness(bulletAngle);
       redBullets[i] = bullet;
+    }
+
+    if (redBots[i].offScreen()) {
+      redBots[i].reduceScore(offScreenScore);
+      redBots[i].alive = false;
     }
   }
 }
 
-function showBots(blueBots, redBots) {
-  for (let i = 0; i < totalPopulation; i++) {
+function showBots(blueBots, redBots, blueBullets, redBullets) {
+  for (let i = 0; i < blueBots.length; i++) {
     if (blueBullets[i] !== undefined) {
       blueBullets[i].show(blue);
     }
@@ -190,12 +252,9 @@ function showBots(blueBots, redBots) {
       redBullets[i].show(red);
     }
 
-    if (blueBots[i].alive) {
+    if (blueBots[i].alive && redBots[i].alive) {
       blueBots[i].showAim(blue);
       blueBots[i].show(blue);
-    }
-
-    if (redBots[i].alive) {
       redBots[i].showAim(red);
       redBots[i].show(red);
     }

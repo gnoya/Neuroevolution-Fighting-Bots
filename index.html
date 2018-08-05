@@ -23,6 +23,19 @@
 
 <body>
   <div id="canvasContainer"></div>
+  <p>
+    Speed:
+    <input id="slider" type="range" min="1" max="100" value="1">
+    <span id="speed">1</span>
+    <br/> Generation:
+    <span id="generation">0</span>
+    <br/> Highest score:
+    <span id="highestScore">0</span>
+    <br/> Not draw:
+    <input id="checkBox" type="checkbox">
+    <br/> Show best:
+    <input id="showBest" type="checkbox" onclick="restartGame()">
+  </p>
 </body>
 
 </html>
